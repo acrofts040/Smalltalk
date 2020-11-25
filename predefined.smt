@@ -202,17 +202,31 @@
 (class Natural
     [subclass-of Magnitude]
 
-    ; instance variables left as an exercise
-    [ivars num b] ; base
-    [ivars num d] ; integer
-    [ivars num m] ; natural number
+    ; instance variables
+    [ivars num b d m] ; base int nat
 
-    (class-method fromSmall: (anInteger) (self leftAsExercise))
-    ; if anInteger = 0 make NatZero
-    ; else make new NatNonzero
-    ; TODO
-    ; figure m and d
-    ; set m and d by calling first:rest:
+    (class-method fromSmall: (anInteger)
+      ((anInteger = 0) ifTrue:ifFalse:
+        {(NatZero new)      first:rest: 0 (NatZero new)}
+          {(NatNonzero new) first:rest:
+            (anInteger mod: (self base))
+              (self fromSmall: (anInteger div: (self base)))}))
+
+    
+    ;;;; private class methods ;;;;
+
+    ; set the base
+    (method setBase ()
+        (set b 16) self)
+
+    ; Answers b, the base of Natural numbers
+    (method base () 16)
+
+    ; Answers a Natural number representing anInteger + aNatural · b
+    (method first:rest: (anInteger aNatural)
+        (set d anInteger)
+        (set m aNatural)
+        self)
 
     (method = (aNatural) (self leftAsExercise))
     (method < (aNatural) (self leftAsExercise))
@@ -235,22 +249,6 @@
     (method isZero  () (self leftAsExercise))
 
     (method print   () ((self decimal) do: [block (x) (x print)]))
-
-
-    ;;;; private class methods ;;;;
-
-    ; Answers b, the base of Natural numbers
-    (method base () 16)
-
-    ; Answers a Natural number representing anInteger + aNatural · b
-    (method first:rest: (anInteger aNatural)
-        (set d anInteger)
-        (set m aNatural)
-        self)
-    ; TODO
-    ; If both its arguments are zero, first:rest: must answer an
-    ; instance of class NatZero. If either argument is nonzero, first:rest: must
-    ; answer an instance of class NatNonzero.
 
 
     ;;;; private instance methods ;;;;
@@ -287,8 +285,6 @@
 (class NatZero
     [subclass-of Natural]
 
-    ; when making an instance, set m and d to 0
-
     (method = (aNatural) (aNatural isZero))
     (method < (aNatural) ((aNatural isZero) not))
 
@@ -299,7 +295,7 @@
 (class NatNonzero
     [subclass-of Natural]
 
-    (method = (aNatural) (m = (aNatural divBase) and: {(d = (aNatural modBase))}))
+    (method = (aNatural) ((m = (aNatural divBase)) and: {(d = (aNatural modBase))}))
     (method < (aNatural)
       ((m < (aNatural divBase)) ifTrue:ifFalse:
         {true}
