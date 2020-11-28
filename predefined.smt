@@ -207,7 +207,7 @@
 
     (class-method fromSmall: (anInteger)
       ((anInteger = 0) ifTrue:ifFalse:
-        {(NatZero new)      first:rest: 0 (NatZero new)}
+        {(NatZero new) first:rest: (0) (NatZero new)}
           {(NatNonzero new) first:rest:
             (anInteger mod: (self base))
               (self fromSmall: (anInteger div: (self base)))}))
@@ -306,6 +306,14 @@
     (method + (aNatural) (self leftAsExercise))
     (method * (aNatural) (self leftAsExercise))
 )
+
+;;;;;;;;;; TESTING FOR CLASS NATURAL AND SUBCLASSES ;;;;;;;;;;
+
+(check-print (Natural fromSmall: 147) 147)
+
+
+
+;;;;;;;;;; END TESTING ;;;;;;;;;;
 
 (class SmallInteger
     [subclass-of Integer] ; primitive representation
