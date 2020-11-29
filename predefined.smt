@@ -363,7 +363,20 @@
     ;;;; private instance methods ;;;;
 
     ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
-    (method plus:carry: (aNatural c) (self leftAsExercise))
+    (method plus:carry: (aNatural c)
+      (aNatural isZero) ifTrue:ifFalse:
+        {(aNatural plus:carry: self c)}
+
+        ; m1 = self m
+        ; m2 = aNatural m
+        ; d1 = self d
+        ; d2 = aNatural d
+        ; d = (d1 + d2 + c) mod base
+        ; c’ = (d1 + d2 + c) div base
+        ; want to return first:rest: (d) (m1 plus:carry: m2 c')
+        {(Natural first:rest: (d) (m1 plus:carry: m2 c')})
+
+    (method carryIntoNatural:carry: (aNatural c) (self leftAsExercise))
 
     ; Compute the difference self − (aNatural + c),
     ; where c is a borrow bit (either 0 or 1).
