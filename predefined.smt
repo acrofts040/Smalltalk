@@ -207,31 +207,35 @@
 
     (class-method fromSmall: (anInteger)
       ((anInteger = 0) ifTrue:ifFalse:
-        {(NatZero new) first:rest: (0) (NatZero new)}
-          {(NatNonzero new) first:rest:
-            (anInteger mod: (self base))
-              (self fromSmall: (anInteger div: (self base)))}))
+        {(NatZero new) first:rest: anInteger (NatZero new)}
+        {(NatNonzero new) first:rest:
+          (anInteger mod: (self base))
+            (self fromSmall: (anInteger div: (self base)))}))
 
-    
+
     ;;;; private class methods ;;;;
 
     ; set the base
-    (method setBase ()
+    (class-method setBase ()
         (set b 16) self)
 
     ; Answers b, the base of Natural numbers
-    (method base () 16)
+    (class-method base () 16)
 
     ; Answers a Natural number representing anInteger + aNatural · b
-    (method first:rest: (anInteger aNatural)
+    (class-method first:rest: (anInteger aNatural)
         (set d anInteger)
         (set m aNatural)
+        (set b 16)
         self)
 
-    (method = (aNatural) (self leftAsExercise))
-    (method < (aNatural) (self leftAsExercise))
+    ;;;; end private class methods ;;;;
 
-    (method + (aNatural) (self leftAsExercise))
+
+    (method = (aNatural) (self subclassResponsibility))
+    (method < (aNatural) (self subclassResponsibility))
+
+    (method + (aNatural) (self subclassResponsibility))
     (method * (aNatural) (self leftAsExercise))
     (method - (aNatural)
       (self subtract:withDifference:ifNegative:
@@ -243,23 +247,26 @@
 
     (method sdiv: (n) (self sdivmod:with: n [block (q r) q]))
     (method smod: (n) (self sdivmod:with: n [block (q r) r]))
-    (method sdivmod:with: (n aBlock) (self leftAsExercise))
+    (method sdivmod:with: (n aBlock) (self subclassResponsibility))
 
     (method decimal () (self leftAsExercise))
-    (method isZero  () (self leftAsExercise))
+    (method isZero  () (self subclassResponsibility))
 
     (method print   () ((self decimal) do: [block (x) (x print)]))
 
 
     ;;;; private instance methods ;;;;
 
-    ; Answers a small integer whose value is the receiver modulo the base of Natural numbers.
+    ; Answers a small integer whose value is the
+    ; receiver modulo the base of Natural numbers.
     (method modBase () d)
 
-    ; Answers a Natural whose value is the receiver divided by the base of Natural numbers.
+    ; Answers a Natural whose value is the
+    ; receiver divided by the base of Natural numbers.
     (method divBase () m)
 
-    ; Answers a Natural whose value is the receiver multiplied by the base of Natural numbers.
+    ; Answers a Natural whose value is the
+    ; receiver multiplied by the base of Natural numbers.
     (method timesBase () (self first:rest: 0 self))
 
     ; Compares self with aNatural. If self is smaller than aNatural evaluate ltBlock.
@@ -272,13 +279,15 @@
           {gtBlock}}))
 
     ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
-    (method plus:carry: (aNatural c) (self leftAsExercise))
+    (method plus:carry: (aNatural c) (self subclassResponsibility))
 
     ; Compute the difference self − (aNatural + c),
     ; where c is a borrow bit (either 0 or 1).
     ; If the difference is nonnegative, answer the difference;
     ; otherwise, halt the program with a checked run-time error.
-    (method minus:borrow: (aNatural c) (self leftAsExercise))
+    (method minus:borrow: (aNatural c) (self subclassResponsibility))
+
+    ;;;; end private instance methods ;;;;
 
 )
 
@@ -288,8 +297,28 @@
     (method = (aNatural) (aNatural isZero))
     (method < (aNatural) ((aNatural isZero) not))
 
-    (method + (aNatural) (self leftAsExercise))
+    (method + (aNatural) aNatural)
     (method * (aNatural) (self leftAsExercise))
+
+    (method sdivmod:with: (n aBlock) (self leftAsExercise))
+
+    (method isZero () true)
+
+    ;;;; private instance methods ;;;;
+
+    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    (method plus:carry: (aNatural c)
+     ((c isZero) ifTrue:ifFalse:
+        {aNatural} ; if c is zero, return aNatural
+        {(self leftAsExercise)})) ; if c isn't zero, check if we have to carry it
+
+    ; Compute the difference self − (aNatural + c),
+    ; where c is a borrow bit (either 0 or 1).
+    ; If the difference is nonnegative, answer the difference;
+    ; otherwise, halt the program with a checked run-time error.
+    (method minus:borrow: (aNatural c) (self leftAsExercise))
+
+    ;;;; end private instance methods ;;;;
 )
 
 (class NatNonzero
@@ -305,11 +334,28 @@
 
     (method + (aNatural) (self leftAsExercise))
     (method * (aNatural) (self leftAsExercise))
+
+    (method sdivmod:with: (n aBlock) (self leftAsExercise))
+
+    (method isZero () false)
+
+    ;;;; private instance methods ;;;;
+
+    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    (method plus:carry: (aNatural c) (self leftAsExercise))
+
+    ; Compute the difference self − (aNatural + c),
+    ; where c is a borrow bit (either 0 or 1).
+    ; If the difference is nonnegative, answer the difference;
+    ; otherwise, halt the program with a checked run-time error.
+    (method minus:borrow: (aNatural c) (self leftAsExercise))
+
+    ;;;; end private instance methods ;;;;
 )
 
 ;;;;;;;;;; TESTING FOR CLASS NATURAL AND SUBCLASSES ;;;;;;;;;;
 
-(check-print (Natural fromSmall: 147) 147)
+(Natural fromSmall: 16)
 
 
 
