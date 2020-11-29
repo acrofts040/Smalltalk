@@ -374,7 +374,7 @@
         ; d = (d1 + d2 + c) mod base
         ; c’ = (d1 + d2 + c) div base
         ; want to return first:rest: (d) (m1 plus:carry: m2 c')
-        {(Natural first:rest: (((self modbase) + (aNatural modBase) + c) mod: (aNatural base)) ((self divBase) plus:carry: (aNatural divBase) ((self modBase) + (aNatural modBase) + c))}
+        {(Natural first:rest: (((self modbase) + (aNatural modBase) + c) mod: (aNatural base)) ((self divBase) plus:carry: (aNatural divBase) ((self modBase) + (aNatural modBase) + c)))})
 
     (method carryIntoNatural:carry: (aNatural c) (self leftAsExercise))
 
