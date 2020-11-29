@@ -202,32 +202,21 @@
 (class Natural
     [subclass-of Magnitude]
 
-    ; instance variables
-    [ivars num b d m] ; base int nat
+    ;; instance variables
+    [ivars b d m]
 
     (class-method fromSmall: (anInteger)
       ((anInteger = 0) ifTrue:ifFalse:
-        {(NatZero new) first:rest: anInteger (NatZero new)}
-        {(NatNonzero new) first:rest:
+        {(NatZero new)}
+        {(NatNonzero first:rest:
           (anInteger mod: (self base))
-            (self fromSmall: (anInteger div: (self base)))}))
+            (Natural fromSmall: (anInteger div: (self base))))}))
 
 
     ;;;; private class methods ;;;;
 
-    ; set the base
-    (class-method setBase ()
-        (set b 16) self)
-
-    ; Answers b, the base of Natural numbers
+    ;; Answers b, the base of Natural numbers
     (class-method base () 16)
-
-    ; Answers a Natural number representing anInteger + aNatural · b
-    (class-method first:rest: (anInteger aNatural)
-        (set d anInteger)
-        (set m aNatural)
-        (set b 16)
-        self)
 
     ;;;; end private class methods ;;;;
 
@@ -236,7 +225,7 @@
     (method < (aNatural) (self subclassResponsibility))
 
     (method + (aNatural) (self subclassResponsibility))
-    (method * (aNatural) (self leftAsExercise))
+    (method * (aNatural) ('multiply- print) (self leftAsExercise))
     (method - (aNatural)
       (self subtract:withDifference:ifNegative:
             aNatural
@@ -249,7 +238,7 @@
     (method smod: (n) (self sdivmod:with: n [block (q r) r]))
     (method sdivmod:with: (n aBlock) (self subclassResponsibility))
 
-    (method decimal () (self leftAsExercise))
+    (method decimal () ('decimal- print) (self leftAsExercise))
     (method isZero  () (self subclassResponsibility))
 
     (method print   () ((self decimal) do: [block (x) (x print)]))
@@ -257,20 +246,20 @@
 
     ;;;; private instance methods ;;;;
 
-    ; Answers a small integer whose value is the
-    ; receiver modulo the base of Natural numbers.
+    ;; Answers a small integer whose value is the
+    ;; receiver modulo the base of Natural numbers.
     (method modBase () d)
 
-    ; Answers a Natural whose value is the
-    ; receiver divided by the base of Natural numbers.
+    ;; Answers a Natural whose value is the
+    ;; receiver divided by the base of Natural numbers.
     (method divBase () m)
 
-    ; Answers a Natural whose value is the
-    ; receiver multiplied by the base of Natural numbers.
+    ;; Answers a Natural whose value is the
+    ;; receiver multiplied by the base of Natural numbers.
     (method timesBase () (self first:rest: 0 self))
 
-    ; Compares self with aNatural. If self is smaller than aNatural evaluate ltBlock.
-    ; If they are equal, evaluate eqBlock. If self is greater, evaluate gtBlock.
+    ;; Compares self with aNatural. If self is smaller than aNatural evaluate ltBlock.
+    ;; If they are equal, evaluate eqBlock. If self is greater, evaluate gtBlock.
     (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
       ((self < aNatural) ifTrue:ifFalse:
         {ltBlock}
@@ -278,13 +267,13 @@
           {eqBlock}
           {gtBlock}}))
 
-    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    ;; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
     (method plus:carry: (aNatural c) (self subclassResponsibility))
 
-    ; Compute the difference self − (aNatural + c),
-    ; where c is a borrow bit (either 0 or 1).
-    ; If the difference is nonnegative, answer the difference;
-    ; otherwise, halt the program with a checked run-time error.
+    ;; Compute the difference self − (aNatural + c),
+    ;; where c is a borrow bit (either 0 or 1).
+    ;; If the difference is nonnegative, answer the difference,
+    ;; otherwise, halt the program with a checked run-time error.
     (method minus:borrow: (aNatural c) (self subclassResponsibility))
 
     ;;;; end private instance methods ;;;;
@@ -306,16 +295,30 @@
 
     ;;;; private instance methods ;;;;
 
-    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    ;; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
     (method plus:carry: (aNatural c)
-     ((c isZero) ifTrue:ifFalse:
-        {aNatural} ; if c is zero, return aNatural
-        {(self leftAsExercise)})) ; if c isn't zero, check if we have to carry it
+      (self carryIntoNatural:carry: aNatural c))
 
-    ; Compute the difference self − (aNatural + c),
-    ; where c is a borrow bit (either 0 or 1).
-    ; If the difference is nonnegative, answer the difference;
-    ; otherwise, halt the program with a checked run-time error.
+
+    ;; helper carry method
+    (method carryIntoNatural:carry: (aNatural c)
+      (c = 0) ifTrue:ifFalse:
+        {aNatural}
+          {(aNatural isZero) ifTrue:ifFalse:
+            {(Natural fromSmall: c)}
+            ; first = (d + 1) mod base
+            ; rest = carryIntoNatural:carry: m ((d + 1) div base)
+            {(Natural first:rest:
+              (((aNatural modBase) + 1) mod: (Natural base))
+                (self carryIntoNatural:carry:
+                  (aNatural divBase)
+                    (((aNatural modBase) + 1) div: (Natural base))))}})
+
+
+    ;; Compute the difference self − (aNatural + c),
+    ;; where c is a borrow bit (either 0 or 1).
+    ;; If the difference is nonnegative, answer the difference;
+    ;; otherwise, halt the program with a checked run-time error.
     (method minus:borrow: (aNatural c) (self leftAsExercise))
 
     ;;;; end private instance methods ;;;;
@@ -323,6 +326,24 @@
 
 (class NatNonzero
     [subclass-of Natural]
+
+    ;;;; private class methods ;;;;
+
+    ; Answers a Natural number representing anInteger + aNatural · b
+    (class-method first:rest: (anInteger aNatural)
+      (((aNatural isZero) and: {(anInteger = 0)}) ifTrue:ifFalse:
+        {(NatZero new)}
+          {(NatNonzero initFirst:rest: anInteger aNatural)}))
+
+    (class-method initFirst:rest: (anInteger aNatural)
+      ((super new) setFirst:rest: anInteger aNatural))
+
+    ;;;; end private class methods ;;;;
+
+    (method setFirst:rest: (anInteger aNatural) ; private
+      (set d anInteger)
+      (set m aNatural)
+      self)
 
     (method = (aNatural) ((m = (aNatural divBase)) and: {(d = (aNatural modBase))}))
     (method < (aNatural)
@@ -355,6 +376,7 @@
 
 ;;;;;;;;;; TESTING FOR CLASS NATURAL AND SUBCLASSES ;;;;;;;;;;
 
+;(Natural fromSmall: 0)
 (Natural fromSmall: 16)
 
 
