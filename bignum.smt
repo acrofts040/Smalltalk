@@ -213,7 +213,7 @@
     ;;;; private class methods ;;;;
 
     ;; Answers b, the base of Natural numbers
-    (class-method base () 16)
+    (class-method base () 10)
 
     ;;;; end private class methods ;;;;
 
@@ -260,7 +260,7 @@
 
     ; Answers a Natural whose value is the
     ; receiver multiplied by the base of Natural numbers.
-    (method timesBase () (self first:rest: 0 self))
+    (method timesBase () (NatNonzero first:rest: 0 self))
 
     ; Compares self with aNatural.
     ; If self is smaller than aNatural evaluate ltBlock.
@@ -427,16 +427,33 @@
     ;; In progress
     ; (mb + d) (m'b' + d') = mm'bb' + mbd' + m'b'd + dd'
     (method * (aNatural) 
+      [locals m1 m2 d1 d2 b]
       ((aNatural isZero) ifTrue:ifFalse:
         {(NatZero new)}
-        { ((((self m) * (aNatural divBase)) * ((self base) * (aNatural base))) + (self mult:Carry: aNatural 0))
-         + ((aNatural mult:Carry: self 0) * (self modBase)) + ((self modBase) * (aNatural modBase)) }))
+        { 
+
+          (set m1 m)
+          (set m2 (aNatural divBase))
+          (set d1 d)
+          (set d2 (aNatural modBase))
+          (set b (Natural base))
+          (((Natural fromSmall: (d1 * d2)) + (((m1 * (Natural fromSmall: d2))  +  (m2 * (Natural fromSmall: d1))) timesBase)) + (((m1 * m2) timesBase)timesBase)
+          )})) 
 
 
-    (method mult:Carry: (aNatural c)
-      [locals c']
-      (set c' (((self modBase) * aNatural) + c))
-      return ((c' modBase) + (((self divBase) mult:Carry: aNatural (c' divBase)) multBase)))
+
+
+
+   ;;       (((m1 * m2) * (b * b))) + (self mult:Carry: aNatural 0))
+   ;;      + ((aNatural mult:Carry: self 0) * (self modBase)) + (
+   ;;(self modBase) * (aNatural modBase)) }))
+
+
+   ;; (method mult:Carry: (aNatural c)
+   ;;  [locals c']
+   ;;   (set c' ((  (Natural fromSmall: (self modBase)) * aNatural) ;; + c))
+   ;;   return ((c' modBase) + (((self divBase) mult:Carry: aNatural 
+   ;; (c' divBase)) multBase)))
 
     ;; TODO ;;
     ; m * b + d div: n
@@ -625,7 +642,14 @@
 (((Natural fromSmall: 0) * (Natural fromSmall: 143)) printrep) ; 0 * 143
 (((Natural fromSmall: 143) * (Natural fromSmall: 0)) printrep) ; 143 * 0
 
-;(((Natural fromSmall: 1) * (Natural fromSmall: 1)) printrep) ; 1 * 1
+(((Natural fromSmall: 1) * (Natural fromSmall: 1)) printrep) ; 1 * 1
+(((Natural fromSmall: 1) * (Natural fromSmall: 2)) printrep) ; 1 * 2
+(((Natural fromSmall: 2) * (Natural fromSmall: 1)) printrep)
+(((Natural fromSmall: 27) * (Natural fromSmall: 1)) printrep)
+(((Natural fromSmall: 1) * (Natural fromSmall: 27)) printrep)
+(((Natural fromSmall: 2) * (Natural fromSmall: 27)) printrep)
+(((Natural fromSmall: 12) * (Natural fromSmall: 12)) printrep)
+(((Natural fromSmall: 122) * (Natural fromSmall: 227)) printrep)
 
 ;; check-print tests
 (check-print (Natural fromSmall: 0)  0)
