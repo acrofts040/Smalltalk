@@ -410,11 +410,13 @@
 
     (method = (aNatural) ((m = (aNatural divBase)) and: {(d = (aNatural modBase))}))
     (method < (aNatural)
-      ((m < (aNatural divBase)) ifTrue:ifFalse:
-        {true}
-        {((m = (aNatural divBase)) ifTrue:ifFalse:
-          {(d < (aNatural modBase))}
-          {false})}))
+      ((aNatural isZero) ifTrue:ifFalse:
+        {false}
+        {((m < (aNatural divBase)) ifTrue:ifFalse:
+          {true}
+          {((m = (aNatural divBase)) ifTrue:ifFalse:
+            {(d < (aNatural modBase))}
+            {false})})}))
 
     (method + (aNatural) (self plus:carry: aNatural 0))
 
@@ -516,8 +518,8 @@
 ;((Natural fromSmall: 0) printrep)
 ;((Natural fromSmall: 1) printrep)
 ;((Natural fromSmall: 10) printrep)
-;((Natural fromSmall: 15) printrep)
-;((Natural fromSmall: 16) printrep)
+((Natural fromSmall: 15) printrep)
+((Natural fromSmall: 16) printrep)
 ;((Natural fromSmall: 17) printrep)
 ;((Natural fromSmall: 127) printrep)
 ;((Natural fromSmall: 128) printrep)
@@ -533,20 +535,54 @@
 (check-assert ((Natural fromSmall: 22) = (Natural fromSmall: 22)))
 
 (check-assert (((Natural fromSmall: 0) = (Natural fromSmall: 22)) not))
-(check-assert (((Natural fromSmall: 0) = (Natural fromSmall: 15)) not))
+(check-assert (((Natural fromSmall: 1) = (Natural fromSmall: 15)) not))
 (check-assert (((Natural fromSmall: 2) = (Natural fromSmall: 1)) not))
 
 ;; check-assert tests for <
 (check-assert ((Natural fromSmall: 0) < (Natural fromSmall: 1)))
+(check-assert ((Natural fromSmall: 0) < (Natural fromSmall: 536)))
 (check-assert ((Natural fromSmall: 1) < (Natural fromSmall: 2)))
 (check-assert ((Natural fromSmall: 15) < (Natural fromSmall: 16)))
 (check-assert ((Natural fromSmall: 16) < (Natural fromSmall: 26)))
 (check-assert ((Natural fromSmall: 17) < (Natural fromSmall: 1352)))
-(check-assert ((Natural fromSmall: 21) < (Natural fromSmall: 23)))
 
 (check-assert (((Natural fromSmall: 0) < (Natural fromSmall: 0)) not))
 (check-assert (((Natural fromSmall: 1) < (Natural fromSmall: 1)) not))
 (check-assert (((Natural fromSmall: 2) < (Natural fromSmall: 1)) not))
+
+;; check-assert tests for >
+(check-assert ((Natural fromSmall: 1) > (Natural fromSmall: 0)))
+(check-assert ((Natural fromSmall: 15) > (Natural fromSmall: 10)))
+(check-assert ((Natural fromSmall: 1565) > (Natural fromSmall: 16)))
+
+(check-assert (((Natural fromSmall: 0) > (Natural fromSmall: 0)) not))
+(check-assert (((Natural fromSmall: 1) > (Natural fromSmall: 1)) not))
+(check-assert (((Natural fromSmall: 1) > (Natural fromSmall: 7)) not))
+
+;; check-assert tests for <=
+(check-assert ((Natural fromSmall: 0) <= (Natural fromSmall: 0)))
+(check-assert ((Natural fromSmall: 0) <= (Natural fromSmall: 1)))
+(check-assert ((Natural fromSmall: 1) <= (Natural fromSmall: 1)))
+(check-assert ((Natural fromSmall: 1) <= (Natural fromSmall: 2)))
+(check-assert ((Natural fromSmall: 15) <= (Natural fromSmall: 15)))
+;(check-assert ((Natural fromSmall: 15) <= (Natural fromSmall: 16)))
+(check-assert ((Natural fromSmall: 16) <= (Natural fromSmall: 26)))
+;(check-assert ((Natural fromSmall: 17) <= (Natural fromSmall: 1352)))
+
+(check-assert (((Natural fromSmall: 24) <= (Natural fromSmall: 0)) not))
+(check-assert (((Natural fromSmall: 100) <= (Natural fromSmall: 1)) not))
+(check-assert (((Natural fromSmall: 16) <= (Natural fromSmall: 1)) not))
+
+;; check-assert tests for >=
+(check-assert ((Natural fromSmall: 0) >= (Natural fromSmall: 0)))
+(check-assert ((Natural fromSmall: 1) >= (Natural fromSmall: 0)))
+(check-assert ((Natural fromSmall: 15) >= (Natural fromSmall: 15)))
+;(check-assert ((Natural fromSmall: 16) >= (Natural fromSmall: 15)))
+;(check-assert ((Natural fromSmall: 1565) >= (Natural fromSmall: 16)))
+
+(check-assert (((Natural fromSmall: 0) >= (Natural fromSmall: 1)) not))
+(check-assert (((Natural fromSmall: 1) >= (Natural fromSmall: 5)) not))
+(check-assert (((Natural fromSmall: 1) >= (Natural fromSmall: 798)) not))
 
 ;; tests for adding nat + 0
 ;(((Natural fromSmall: 0) + (Natural fromSmall: 0)) printrep) ; 0 + 0
