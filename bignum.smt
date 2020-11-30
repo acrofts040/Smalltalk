@@ -207,7 +207,7 @@
         {(NatZero new)}
         {(NatNonzero first:rest:
           (anInteger mod: (self base)) ; integer d
-            (Natural fromSmall: (anInteger div: (self base))))})) ; nat number m
+            (Natural fromSmall: (anInteger div: (self base))))})) ; nat m
 
 
     ;;;; private class methods ;;;;
@@ -229,7 +229,7 @@
             [block (x) x]
             {(self error: 'Natural-subtraction-went-negative)}))
     (method subtract:withDifference:ifNegative: (aNatural diffBlock exnBlock)
-      (self leftAsExercise))
+      (self leftAsExercise)) ;; TODO
 
     (method sdiv: (n) (self sdivmod:with: n [block (q r) q]))
     (method smod: (n) (self sdivmod:with: n [block (q r) r]))
@@ -262,8 +262,10 @@
     ; receiver multiplied by the base of Natural numbers.
     (method timesBase () (self first:rest: 0 self))
 
-    ; Compares self with aNatural. If self is smaller than aNatural evaluate ltBlock.
-    ; If they are equal, evaluate eqBlock. If self is greater, evaluate gtBlock.
+    ; Compares self with aNatural.
+    ; If self is smaller than aNatural evaluate ltBlock.
+    ; If they are equal, evaluate eqBlock.
+    ; If self is greater, evaluate gtBlock.
     (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
       ((self < aNatural) ifTrue:ifFalse:
         {ltBlock}
@@ -333,12 +335,16 @@
 
           ; else, add aNatural + c
           {(set d2 (aNatural modBase))
-            (set fst ((d2 + 1) mod: (aNatural base))) ; first = (d2 + 1) mod base
+
+            ; first = (d2 + 1) mod base
+            (set fst ((d2 + 1) mod: (Natural base)))
+
             ; rest = carryIntoNatural:carry: m ((d2 + 1) div base)
             (set rst (self carryIntoNatural:carry: 
                       (aNatural divBase)
-                        ((d2 + 1) div: (aNatural base))))
-            (self first:rest: fst rst)})}))
+                        ((d2 + 1) div: (Natural base))))
+
+            (NatNonzero first:rest: fst rst)})}))
 
     ;; OLD ;;
     ; private helper method carryIntoNatural
@@ -351,7 +357,7 @@
           ;{(Natural fromSmall: c)}
           ;; first = (d + 1) mod base
           ;; rest = carryIntoNatural:carry: m ((d + 1) div base)
-          ;{(self first:rest:
+          ;{(NatNonzero first:rest:
             ;(((aNatural modBase) + 1) mod: (self base))
               ;(self carryIntoNatural:carry:
                 ;(aNatural divBase)
@@ -406,9 +412,9 @@
     (method < (aNatural)
       ((m < (aNatural divBase)) ifTrue:ifFalse:
         {true}
-        {(m = (aNatural divBase)) ifTrue:ifFalse:
+        {((m = (aNatural divBase)) ifTrue:ifFalse:
           {(d < (aNatural modBase))}
-          {false}}))
+          {false})}))
 
     (method + (aNatural) (self plus:carry: aNatural 0))
 
@@ -419,7 +425,7 @@
     ;(method * (aNatural) 
       ;((aNatural isZero) ifTrue:ifFalse:
         ;{NatZero}
-        ;{ ((((self m) * (aNatural divBase)) * ((self base) * (aNatural base))) + (self mult:Carry (aNatural) (0)))
+        ;{ ((((self m) * (aNatural divBase)) * ((self base) * (self base))) + (self mult:Carry (aNatural) (0)))
         ; + (((aNatural mult:Carry (self) (0)) * (self modBase)) + ((self modBase) * (aNatural modBase))) }))
 
     ;; TODO ;;
@@ -468,10 +474,10 @@
           (set m2 (aNatural divBase))
           (set d1 d)
           (set d2 (aNatural modBase))
-          (set d' (((d1 + d2) + c) mod: (self base))) ; d' = (d1 + d2 + c) mod base
-          (set c' (((d1 + d2) + c) div: (self base))) ; c’ = (d1 + d2 + c) div base
+          (set d' (((d1 + d2) + c) mod: (Natural base))) ; d' = (d1 + d2 + c) mod base
+          (set c' (((d1 + d2) + c) div: (Natural base))) ; c’ = (d1 + d2 + c) div base
 
-          (self first:rest: d' (m1 plus:carry: m2 c'))}))
+          (return (NatNonzero first:rest: d' (m1 plus:carry: m2 c')))}))
 
 
      ; Compute the difference self − (aNatural + c),
@@ -492,7 +498,7 @@
           (set m2 (aNatural divBase))
           (set d1 d)
           (set d2 (aNatural modBase))
-          (set d' (((d1 - d2) - c) mod: (self base))) ; d' = (d1 - d2 - b) mod base
+          (set d' (((d1 - d2) - c) mod: (Natural base))) ; d' = (d1 - d2 - b) mod base
           (self leftAsExercise)}))
 
     ; private helper method borrowFromNat
@@ -506,6 +512,7 @@
 
 ;;;;;;;;;; TESTING FOR CLASS NATURAL ;;;;;;;;;;
 
+;; tests for creating new natural numbers
 ;((Natural fromSmall: 0) printrep)
 ;((Natural fromSmall: 1) printrep)
 ;((Natural fromSmall: 10) printrep)
@@ -517,6 +524,31 @@
 ;((Natural fromSmall: 129) printrep)
 ;((Natural fromSmall: 143) printrep)
 
+;; check-assert tests for =
+(check-assert ((Natural fromSmall: 0) = (Natural fromSmall: 0)))
+(check-assert ((Natural fromSmall: 1) = (Natural fromSmall: 1)))
+(check-assert ((Natural fromSmall: 15) = (Natural fromSmall: 15)))
+(check-assert ((Natural fromSmall: 16) = (Natural fromSmall: 16)))
+(check-assert ((Natural fromSmall: 17) = (Natural fromSmall: 17)))
+(check-assert ((Natural fromSmall: 22) = (Natural fromSmall: 22)))
+
+(check-assert (((Natural fromSmall: 0) = (Natural fromSmall: 22)) not))
+(check-assert (((Natural fromSmall: 0) = (Natural fromSmall: 15)) not))
+(check-assert (((Natural fromSmall: 2) = (Natural fromSmall: 1)) not))
+
+;; check-assert tests for <
+(check-assert ((Natural fromSmall: 0) < (Natural fromSmall: 1)))
+(check-assert ((Natural fromSmall: 1) < (Natural fromSmall: 2)))
+(check-assert ((Natural fromSmall: 15) < (Natural fromSmall: 16)))
+(check-assert ((Natural fromSmall: 16) < (Natural fromSmall: 26)))
+(check-assert ((Natural fromSmall: 17) < (Natural fromSmall: 1352)))
+(check-assert ((Natural fromSmall: 21) < (Natural fromSmall: 23)))
+
+(check-assert (((Natural fromSmall: 0) < (Natural fromSmall: 0)) not))
+(check-assert (((Natural fromSmall: 1) < (Natural fromSmall: 1)) not))
+(check-assert (((Natural fromSmall: 2) < (Natural fromSmall: 1)) not))
+
+;; tests for adding nat + 0
 ;(((Natural fromSmall: 0) + (Natural fromSmall: 0)) printrep) ; 0 + 0
 ;(((Natural fromSmall: 0) + (Natural fromSmall: 1)) printrep) ; 0 + 1
 ;(((Natural fromSmall: 1) + (Natural fromSmall: 0)) printrep) ; 1 + 0
@@ -527,8 +559,21 @@
 ;(((Natural fromSmall: 0) + (Natural fromSmall: 143)) printrep) ; 0 + 143
 ;(((Natural fromSmall: 143) + (Natural fromSmall: 0)) printrep) ; 143 + 0
 
-((Natural fromSmall: 1) + (Natural fromSmall: 1)) ; 1 + 1
+;; tests for adding nonzero naturals
+;(((Natural fromSmall: 1) + (Natural fromSmall: 1)) printrep) ; 1 + 1
+;(((Natural fromSmall: 1) + (Natural fromSmall: 2)) printrep) ; 1 + 2
+;(((Natural fromSmall: 1) + (Natural fromSmall: 9)) printrep) ; 1 + 9
+;(((Natural fromSmall: 9) + (Natural fromSmall: 1)) printrep) ; 9 + 1
+;(((Natural fromSmall: 1) + (Natural fromSmall: 15)) printrep) ; 1 + 15
+;(((Natural fromSmall: 15) + (Natural fromSmall: 1)) printrep) ; 15 + 1
+;(((Natural fromSmall: 1) + (Natural fromSmall: 127)) printrep) ; 1 + 127
+;(((Natural fromSmall: 127) + (Natural fromSmall: 1)) printrep) ; 127 + 1
+;(((Natural fromSmall: 1) + (Natural fromSmall: 143)) printrep) ; 1 + 143
+;(((Natural fromSmall: 143) + (Natural fromSmall: 1)) printrep) ; 143 + 1
+;(((Natural fromSmall: 1) + (Natural fromSmall: 1023)) printrep) ; 1 + 1023
+;(((Natural fromSmall: 1023) + (Natural fromSmall: 1)) printrep) ; 1023 + 1
 
+;; check-print tests
 (check-print (Natural fromSmall: 0)  0)
 ;(check-print (Natural fromSmall: 1)  1)
 ;(check-print (Natural fromSmall: 10) 10)
