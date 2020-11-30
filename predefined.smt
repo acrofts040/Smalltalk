@@ -300,7 +300,9 @@
       (self carryIntoNatural:carry: aNatural c))
 
 
-    ;; helper carry method
+    ; helper carry method
+    ; if c is 0, return aNatural
+    ; if c is 1, add to aNatural
     (method carryIntoNatural:carry: (aNatural c)
       (c = 0) ifTrue:ifFalse:
         {aNatural}
@@ -308,11 +310,11 @@
             {(Natural fromSmall: c)}
             ; first = (d + 1) mod base
             ; rest = carryIntoNatural:carry: m ((d + 1) div base)
-            {(Natural first:rest:
-              (((aNatural modBase) + 1) mod: (Natural base))
+            {(self first:rest:
+              (((aNatural modBase) + 1) mod: (self base))
                 (self carryIntoNatural:carry:
                   (aNatural divBase)
-                    (((aNatural modBase) + 1) div: (Natural base))))}})
+                    (((aNatural modBase) + 1) div: (self base))))}})
 
 
     ;; Compute the difference self − (aNatural + c),
@@ -336,11 +338,12 @@
           {(NatNonzero initFirst:rest: anInteger aNatural)}))
 
     (class-method initFirst:rest: (anInteger aNatural)
-      ((super new) setFirst:rest: anInteger aNatural))
+      ((self new) setFirst:rest: anInteger aNatural))
 
     ;;;; end private class methods ;;;;
 
-    (method setFirst:rest: (anInteger aNatural) ; private
+    ; private method
+    (method setFirst:rest: (anInteger aNatural) 
       (set d anInteger)
       (set m aNatural)
       self)
@@ -374,7 +377,9 @@
         ; d = (d1 + d2 + c) mod base
         ; c’ = (d1 + d2 + c) div base
         ; want to return first:rest: (d) (m1 plus:carry: m2 c')
-        {(Natural first:rest: (d) (m1 plus:carry: m2 c')})
+        {(self first:rest:
+            (((self d) + (aNatural modBase) + c) mod: (aNatural base))
+            ((self m) plus:carry: (aNatural divBase) (((self d) + (aNatural modBase) + c) div: (aNatural base))))})
 
     (method carryIntoNatural:carry: (aNatural c) (self leftAsExercise))
 
@@ -389,8 +394,14 @@
 
 ;;;;;;;;;; TESTING FOR CLASS NATURAL AND SUBCLASSES ;;;;;;;;;;
 
-;(Natural fromSmall: 0)
-(Natural fromSmall: 16)
+('0 println)
+(Natural fromSmall: 0)
+('10 println)
+(Natural fromSmall: 10)
+;('16 println)
+;(Natural fromSmall: 16)
+;('143 println)
+;(Natural fromSmall: 143)
 
 
 

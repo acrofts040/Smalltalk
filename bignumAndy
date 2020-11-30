@@ -209,8 +209,8 @@
       ((anInteger = 0) ifTrue:ifFalse:
         {(NatZero new)}
         {(NatNonzero first:rest:
-          (anInteger mod: (self base))
-            (Natural fromSmall: (anInteger div: (self base))))}))
+          (anInteger mod: (self base)) ; integer d
+            (Natural fromSmall: (anInteger div: (self base))))})) ; nat number m
 
 
     ;;;; private class methods ;;;;
@@ -225,7 +225,7 @@
     (method < (aNatural) (self subclassResponsibility))
 
     (method + (aNatural) (self subclassResponsibility))
-    (method * (aNatural) ('multiply- print) (self leftAsExercise))
+    (method * (aNatural) (self subclassResponsibility))
     (method - (aNatural)
       (self subtract:withDifference:ifNegative:
             aNatural
@@ -238,7 +238,10 @@
     (method smod: (n) (self sdivmod:with: n [block (q r) r]))
     (method sdivmod:with: (n aBlock) (self subclassResponsibility))
 
-    (method decimal () ('decimal- print) (self leftAsExercise))
+    ; Answer a List containing the decimal digits of the receiver,
+    ; most significant digit first.
+    (method decimal () (self subclassResponsibility))
+
     (method isZero  () (self subclassResponsibility))
 
     (method print   () ((self decimal) do: [block (x) (x print)]))
@@ -286,10 +289,15 @@
     (method = (aNatural) (aNatural isZero))
     (method < (aNatural) ((aNatural isZero) not))
 
-    (method + (aNatural) aNatural)
-    (method * (aNatural) (self leftAsExercise))
+    (method + (aNatural) (self plus:carry: aNatural 0))
+    (method * (aNatural) (NatZero new))
 
-    (method sdivmod:with: (n aBlock) (self leftAsExercise))
+    (method sdivmod:with: (n aBlock) (aBlock value:value: 0 0))
+
+    (method decimal () (self decimal-helper: ((List new) addFirst: 0)))
+
+    ; private decimal helper
+    (method decimal-helper: (aList) aList)
 
     (method isZero () true)
 
@@ -300,26 +308,37 @@
       (self carryIntoNatural:carry: aNatural c))
 
 
-    ;; helper carry method
+    ; private helper method carryIntoNatural
+    ; if c is 0, return aNatural
+    ; if c is 1, add to aNatural
     (method carryIntoNatural:carry: (aNatural c)
       (c = 0) ifTrue:ifFalse:
         {aNatural}
-          {(aNatural isZero) ifTrue:ifFalse:
-            {(Natural fromSmall: c)}
-            ; first = (d + 1) mod base
-            ; rest = carryIntoNatural:carry: m ((d + 1) div base)
-            {(Natural first:rest:
-              (((aNatural modBase) + 1) mod: (Natural base))
-                (self carryIntoNatural:carry:
-                  (aNatural divBase)
-                    (((aNatural modBase) + 1) div: (Natural base))))}})
+        {(aNatural isZero) ifTrue:ifFalse:
+          {(Natural fromSmall: c)}
+          ; first = (d + 1) mod base
+          ; rest = carryIntoNatural:carry: m ((d + 1) div base)
+          {(self first:rest:
+            (((aNatural modBase) + 1) mod: (self base))
+              (self carryIntoNatural:carry:
+                (aNatural divBase)
+                  (((aNatural modBase) + 1) div: (self base))))}})
 
 
     ;; Compute the difference self − (aNatural + c),
     ;; where c is a borrow bit (either 0 or 1).
     ;; If the difference is nonnegative, answer the difference;
     ;; otherwise, halt the program with a checked run-time error.
-    (method minus:borrow: (aNatural c) (self leftAsExercise))
+    (method minus:borrow: (aNatural c)
+      (aNatural isZero) ifTrue:ifFalse:
+        {self borrowFromNat:borrow: aNatural c}
+        {(self error: 'Natural-subtraction-went-negative)})
+
+    ; private helper method borrowFromNat
+    (method borrowFromNat:borrow: (aNatural c)
+      (c = 0) ifTrue:ifFalse:
+        {(NatZero new)}
+        {(self error: 'Natural-subtraction-went-negative)})
 
     ;;;; end private instance methods ;;;;
 )
@@ -336,11 +355,12 @@
           {(NatNonzero initFirst:rest: anInteger aNatural)}))
 
     (class-method initFirst:rest: (anInteger aNatural)
-      ((super new) setFirst:rest: anInteger aNatural))
+      ((self new) setFirst:rest: anInteger aNatural))
 
     ;;;; end private class methods ;;;;
 
-    (method setFirst:rest: (anInteger aNatural) ; private
+    ; private method
+    (method setFirst:rest: (anInteger aNatural) 
       (set d anInteger)
       (set m aNatural)
       self)
@@ -353,45 +373,87 @@
           {(d < (aNatural modBase))}
           {false}}))
 
-    (method + (aNatural) (self leftAsExercise))
+    (method + (aNatural) (self plus:carry: aNatural 0))
+
+    ; (mb + d) (m'b' + d') = mm'bb' + mbd' + m'b'd + dd'
     (method * (aNatural) (self leftAsExercise))
 
+    ; m * b + d div: n
+    ; m * b + d mod: n
+    ; (method sdivmod:with: (n aBlock) (aBlock value:value: (m * b + d div: n) (m * b + d mod: n)))
     (method sdivmod:with: (n aBlock) (self leftAsExercise))
+
+    (method decimal () (self decimal-helper: (List new)))
+
+    ; private decimal helper
+    (method decimal-helper: (aList)
+      ((self sdiv: 10) decimal-helper: (aList addFirst: (self smod: 10))))
 
     (method isZero () false)
 
     ;;;; private instance methods ;;;;
 
     ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    ; if aNatural is zero, send message plus:carry: to aNatural with self and c as args
+    ; else add self + aNatural + c
     (method plus:carry: (aNatural c)
-      (aNatural isZero) ifTrue:ifFalse:
+      [locals m1 m2 d1 d2 d' c']
+      (set m1 (self m))
+      (set m2 (aNatural divBase))
+      (set d1 (self d))
+      (set d2 (aNatural modBase))
+      (set d' (((d1 + d2) + c) mod: (aNatural base))) ; d' = (d1 + d2 + c) mod base
+      (set c' (((d1 + d2) + c) div: (aNatural base))) ; c’ = (d1 + d2 + c) div base
+
+
+      ((aNatural isZero) ifTrue:ifFalse:
+        ; if aNatural is zero, add self + c
         {(aNatural plus:carry: self c)}
 
-        ; m1 = self m
-        ; m2 = aNatural m
-        ; d1 = self d
-        ; d2 = aNatural d
-        ; d = (d1 + d2 + c) mod base
-        ; c’ = (d1 + d2 + c) div base
-        ; want to return first:rest: (d) (m1 plus:carry: m2 c')
-        {(Natural first:rest: (((self modbase) + (aNatural modBase) + c) mod: (aNatural base)) ((self divBase) plus:carry: (aNatural divBase) (((self modBase) + (aNatural modBase) + c) div: (aNatural base))))})
+        ; else, return first:rest: (d') (m1 plus:carry: m2 c')
+        {(self first:rest: d' (m1 plus:carry: m2 c'))}))
 
-    (method carryIntoNatural:carry: (aNatural c) (self leftAsExercise))
 
     ; Compute the difference self − (aNatural + c),
     ; where c is a borrow bit (either 0 or 1).
     ; If the difference is nonnegative, answer the difference;
     ; otherwise, halt the program with a checked run-time error.
-    (method minus:borrow: (aNatural c) (self leftAsExercise))
+    (method minus:borrow: (aNatural c)
+      [locals m1 m2 d1 d2 d' c']
+      (set m1 (self m))
+      (set m2 (aNatural divBase))
+      (set d1 (self d))
+      (set d2 (aNatural modBase))
+      (set d' (((d1 - d2) - c) mod: (self case))) ; d' = (d1 - d2 - b) mod base
+
+      (aNatural isZero) ifTrue:ifFalse:
+        ; if aNatural is zero, self - c
+        {(self borrowFromNat:borrow: (NatZero new) c)}
+
+        ; else, self - aNatural - c
+        
+        ; c’ = if d1 - d2 - c < 0 then 1 else 0
+        ; return first:rest: (m1 minus:borrow: m2 c’) d
+        {(self leftAsExercise)})
+
+    ; private helper method borrowFromNat
+    (method borrowFromNat:borrow: (aNatural c)
+      (c = 0) ifTrue:ifFalse:
+        {(self leftAsExercise)}
+        {(self leftAsExercise)})
 
     ;;;; end private instance methods ;;;;
 )
 
 ;;;;;;;;;; TESTING FOR CLASS NATURAL AND SUBCLASSES ;;;;;;;;;;
 
-;(Natural fromSmall: 0)
-(Natural fromSmall: 16)
-
+(check-print (Natural fromSmall: 0)  0)
+;(check-print (Natural fromSmall: 1)  1)
+;(check-print (Natural fromSmall: 10) 10)
+;(check-print (Natural fromSmall: 15) 15)
+;(check-print (Natural fromSmall: 16) 16)
+;(check-print (Natural fromSmall: 17) 17)
+;(check-print (Natural fromSmall: 143) 143)
 
 
 ;;;;;;;;;; END TESTING ;;;;;;;;;;
