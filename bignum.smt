@@ -408,7 +408,11 @@
       (set m aNatural)
       self)
 
-    (method = (aNatural) ((m = (aNatural divBase)) and: {(d = (aNatural modBase))}))
+    (method = (aNatural)
+      ((aNatural isZero) ifTrue:ifFalse:
+        {false}
+        {((m = (aNatural divBase)) and: {(d = (aNatural modBase))})}))
+      
     (method < (aNatural)
       ((aNatural isZero) ifTrue:ifFalse:
         {false}
@@ -424,7 +428,7 @@
     ; (mb + d) (m'b' + d') = mm'bb' + mbd' + m'b'd + dd'
     (method * (aNatural) 
       ((aNatural isZero) ifTrue:ifFalse:
-        {NatZero new}
+        {(NatZero new)}
         { ((((self m) * (aNatural divBase)) * ((self base) * (aNatural base))) + (self mult:Carry: aNatural 0))
          + ((aNatural mult:Carry: self 0) * (self modBase)) + ((self modBase) * (aNatural modBase)) }))
 
@@ -434,7 +438,7 @@
       (set c' (((self modBase) * aNatural) + c))
       return ((c' modBase) + (((self divBase) mult:Carry: aNatural (c' divBase)) multBase)))
 
-    ;; TODO :;
+    ;; TODO ;;
     ; m * b + d div: n
     ; m * b + d mod: n
     ; (method sdivmod:with: (n aBlock) (aBlock value:value: (m * b + d div: n) (m * b + d mod: n)))
@@ -480,7 +484,7 @@
           (return (NatNonzero first:rest: d' (m1 plus:carry: m2 c')))}))
 
 
-     ; Compute the difference self − (aNatural + c),
+    ; Compute the difference self − (aNatural + c),
     ; where c is a borrow bit (either 0 or 1).
     ; If the difference is nonnegative, answer the difference;
     ; otherwise, halt the program with a checked run-time error.
@@ -563,20 +567,23 @@
 (check-assert ((Natural fromSmall: 1) <= (Natural fromSmall: 1)))
 (check-assert ((Natural fromSmall: 1) <= (Natural fromSmall: 2)))
 (check-assert ((Natural fromSmall: 15) <= (Natural fromSmall: 15)))
-;(check-assert ((Natural fromSmall: 15) <= (Natural fromSmall: 16)))
+(check-assert ((Natural fromSmall: 15) <= (Natural fromSmall: 16)))
 (check-assert ((Natural fromSmall: 16) <= (Natural fromSmall: 26)))
-;(check-assert ((Natural fromSmall: 17) <= (Natural fromSmall: 1352)))
+(check-assert ((Natural fromSmall: 127) <= (Natural fromSmall: 128)))
+(check-assert ((Natural fromSmall: 127) <= (Natural fromSmall: 127)))
+(check-assert ((Natural fromSmall: 17) <= (Natural fromSmall: 1352)))
 
 (check-assert (((Natural fromSmall: 24) <= (Natural fromSmall: 0)) not))
 (check-assert (((Natural fromSmall: 100) <= (Natural fromSmall: 1)) not))
 (check-assert (((Natural fromSmall: 16) <= (Natural fromSmall: 1)) not))
+(check-assert (((Natural fromSmall: 127) <= (Natural fromSmall: 126)) not))
 
 ;; check-assert tests for >=
 (check-assert ((Natural fromSmall: 0) >= (Natural fromSmall: 0)))
 (check-assert ((Natural fromSmall: 1) >= (Natural fromSmall: 0)))
 (check-assert ((Natural fromSmall: 15) >= (Natural fromSmall: 15)))
-;(check-assert ((Natural fromSmall: 16) >= (Natural fromSmall: 15)))
-;(check-assert ((Natural fromSmall: 1565) >= (Natural fromSmall: 16)))
+(check-assert ((Natural fromSmall: 16) >= (Natural fromSmall: 15)))
+(check-assert ((Natural fromSmall: 1565) >= (Natural fromSmall: 16)))
 
 (check-assert (((Natural fromSmall: 0) >= (Natural fromSmall: 1)) not))
 (check-assert (((Natural fromSmall: 1) >= (Natural fromSmall: 5)) not))
@@ -606,6 +613,19 @@
 ;(((Natural fromSmall: 143) + (Natural fromSmall: 1)) printrep) ; 143 + 1
 ;(((Natural fromSmall: 1) + (Natural fromSmall: 1023)) printrep) ; 1 + 1023
 ;(((Natural fromSmall: 1023) + (Natural fromSmall: 1)) printrep) ; 1023 + 1
+
+;; tests for multiplying nat * 0
+(((Natural fromSmall: 0) * (Natural fromSmall: 0)) printrep) ; 0 * 0
+(((Natural fromSmall: 0) * (Natural fromSmall: 1)) printrep) ; 0 * 1
+(((Natural fromSmall: 1) * (Natural fromSmall: 0)) printrep) ; 1 * 0
+(((Natural fromSmall: 0) * (Natural fromSmall: 10)) printrep) ; 0 * 10
+(((Natural fromSmall: 10) * (Natural fromSmall: 0)) printrep) ; 10 * 0
+(((Natural fromSmall: 0) * (Natural fromSmall: 16)) printrep) ; 0 * 16
+(((Natural fromSmall: 16) * (Natural fromSmall: 0)) printrep) ; 16 * 0
+(((Natural fromSmall: 0) * (Natural fromSmall: 143)) printrep) ; 0 * 143
+(((Natural fromSmall: 143) * (Natural fromSmall: 0)) printrep) ; 143 * 0
+
+;(((Natural fromSmall: 1) * (Natural fromSmall: 1)) printrep) ; 1 * 1
 
 ;; check-print tests
 (check-print (Natural fromSmall: 0)  0)
