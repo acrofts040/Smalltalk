@@ -420,22 +420,20 @@
 
     (method + (aNatural) (self plus:carry: aNatural 0))
 
-
-    ;; In progress ;;
-    ;; TODO ;;
+    ;; In progress
     ; (mb + d) (m'b' + d') = mm'bb' + mbd' + m'b'd + dd'
-    ;(method * (aNatural) 
-      ;((aNatural isZero) ifTrue:ifFalse:
-        ;{NatZero}
-        ;{ ((((self m) * (aNatural divBase)) * ((self base) * (self base))) + (self mult:Carry (aNatural) (0)))
-        ; + (((aNatural mult:Carry (self) (0)) * (self modBase)) + ((self modBase) * (aNatural modBase))) }))
+    (method * (aNatural) 
+      ((aNatural isZero) ifTrue:ifFalse:
+        {NatZero new}
+        { ((((self m) * (aNatural divBase)) * ((self base) * (aNatural base))) + (self mult:Carry: aNatural 0))
+         + ((aNatural mult:Carry: self 0) * (self modBase)) + ((self modBase) * (aNatural modBase)) }))
 
-    ;; TODO ;;
-    ;(method mult:Carry: (aNatural c)
-     ; [locals c']
-      ;(set c' ((self modBase) * aNatural) + c)
-      ;return ((c' modBase) + (((self divBase) mult:Carry (aNatural) (c' divBase)) multBase)))
- 
+
+    (method mult:Carry: (aNatural c)
+      [locals c']
+      (set c' (((self modBase) * aNatural) + c))
+      return ((c' modBase) + (((self divBase) mult:Carry: aNatural (c' divBase)) multBase)))
+
     ;; TODO :;
     ; m * b + d div: n
     ; m * b + d mod: n
