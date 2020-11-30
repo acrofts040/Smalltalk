@@ -337,7 +337,7 @@
     ; private helper method borrowFromNat
     (method borrowFromNat:borrow: (aNatural c)
       (c = 0) ifTrue:ifFalse:
-        {(NatZero new)}
+        {(NatZero ne
         {(self error: 'Natural-subtraction-went-negative)})
 
     ;;;; end private instance methods ;;;;
@@ -375,9 +375,21 @@
 
     (method + (aNatural) (self plus:carry: aNatural 0))
 
-    ; (mb + d) (m'b' + d') = mm'bb' + mbd' + m'b'd + dd'
-    (method * (aNatural) (self leftAsExercise))
 
+    ;; In progress
+    ; (mb + d) (m'b' + d') = mm'bb' + mbd' + m'b'd + dd'
+    (method * (aNatural) 
+      ((aNatural isZero) ifTrue:ifFalse:
+        {NatZero}
+        { ((((self m) * (aNatural divBase)) * ((self base) * (aNatural base))) + (self mult:Carry (aNatural) (0)))
+         + (((aNatural mult:Carry (self) (0)) * (self modBase)) + ((self modBase) * (aNatural modBase))) }))
+
+
+    (method mult:Carry: (aNatural c)
+      [locals c']
+      (set c' ((self modBase) * aNatural) + c)
+      return ((c' modBase) + (((self divBase) mult:Carry (aNatural) (c' divBase)) multBase)))
+ 
     ; m * b + d div: n
     ; m * b + d mod: n
     ; (method sdivmod:with: (n aBlock) (aBlock value:value: (m * b + d div: n) (m * b + d mod: n)))
