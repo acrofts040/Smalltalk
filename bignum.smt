@@ -202,9 +202,6 @@
 (class Natural
     [subclass-of Magnitude]
 
-    ;; instance variables
-    [ivars b d m]
-
     (class-method fromSmall: (anInteger)
       ((anInteger = 0) ifTrue:ifFalse:
         {(NatZero new)}
@@ -246,37 +243,41 @@
 
     (method print   () ((self decimal) do: [block (x) (x print)]))
 
+    ; private method printrep for debugging
+    (method printrep () ((self base-rep) do: [block (x) (x print) ('/ print)]))
+    (method base-rep () (self subclassResponsibility)) ; private
+
 
     ;;;; private instance methods ;;;;
 
-    ;; Answers a small integer whose value is the
-    ;; receiver modulo the base of Natural numbers.
+    ; Answers a small integer whose value is the
+    ; receiver modulo the base of Natural numbers.
     (method modBase () d)
 
-    ;; Answers a Natural whose value is the
-    ;; receiver divided by the base of Natural numbers.
+    ; Answers a Natural whose value is the
+    ; receiver divided by the base of Natural numbers.
     (method divBase () m)
 
-    ;; Answers a Natural whose value is the
-    ;; receiver multiplied by the base of Natural numbers.
+    ; Answers a Natural whose value is the
+    ; receiver multiplied by the base of Natural numbers.
     (method timesBase () (self first:rest: 0 self))
 
-    ;; Compares self with aNatural. If self is smaller than aNatural evaluate ltBlock.
-    ;; If they are equal, evaluate eqBlock. If self is greater, evaluate gtBlock.
+    ; Compares self with aNatural. If self is smaller than aNatural evaluate ltBlock.
+    ; If they are equal, evaluate eqBlock. If self is greater, evaluate gtBlock.
     (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
       ((self < aNatural) ifTrue:ifFalse:
         {ltBlock}
-        {(self = aNatural) ifTrue:ifFalse:
+        {((self = aNatural) ifTrue:ifFalse:
           {eqBlock}
-          {gtBlock}}))
+          {gtBlock})}))
 
-    ;; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
     (method plus:carry: (aNatural c) (self subclassResponsibility))
 
-    ;; Compute the difference self − (aNatural + c),
-    ;; where c is a borrow bit (either 0 or 1).
-    ;; If the difference is nonnegative, answer the difference,
-    ;; otherwise, halt the program with a checked run-time error.
+    ; Compute the difference self − (aNatural + c),
+    ; where c is a borrow bit (either 0 or 1).
+    ; If the difference is nonnegative, answer the difference,
+    ; otherwise, halt the program with a checked run-time error.
     (method minus:borrow: (aNatural c) (self subclassResponsibility))
 
     ;;;; end private instance methods ;;;;
@@ -294,16 +295,23 @@
 
     (method sdivmod:with: (n aBlock) (aBlock value:value: 0 0))
 
-    (method decimal () (self decimal-helper: ((List new) addFirst: 0)))
+    (method decimal () ((List new) addFirst: 0))
 
     ; private decimal helper
     (method decimal-helper: (aList) aList)
+
+    ; private method
+    ; analogous to decimal but uses the base of Natural
+    (method base-rep () ((List new) addFirst: 0))
+
+    ; private base-rep-helper
+    (method base-rep-helper: (aList) aList)
 
     (method isZero () true)
 
     ;;;; private instance methods ;;;;
 
-    ;; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
     (method plus:carry: (aNatural c)
       (self carryIntoNatural:carry: aNatural c))
 
@@ -312,33 +320,59 @@
     ; if c is 0, return aNatural
     ; if c is 1, add to aNatural
     (method carryIntoNatural:carry: (aNatural c)
-      (c = 0) ifTrue:ifFalse:
+      [locals d2 fst rst]
+
+      ((c = 0) ifTrue:ifFalse:
+        ; if c = 0, return aNatural
         {aNatural}
-        {(aNatural isZero) ifTrue:ifFalse:
+        ; else, check if aNatural is zero
+        {((aNatural isZero) ifTrue:ifFalse:
+
+          ; if aNatural is zero, return c
           {(Natural fromSmall: c)}
-          ; first = (d + 1) mod base
-          ; rest = carryIntoNatural:carry: m ((d + 1) div base)
-          {(self first:rest:
-            (((aNatural modBase) + 1) mod: (self base))
-              (self carryIntoNatural:carry:
-                (aNatural divBase)
-                  (((aNatural modBase) + 1) div: (self base))))}})
+
+          ; else, add aNatural + c
+          {(set d2 (aNatural modBase))
+            (set fst ((d2 + 1) mod: (aNatural base))) ; first = (d2 + 1) mod base
+            ; rest = carryIntoNatural:carry: m ((d2 + 1) div base)
+            (set rst (self carryIntoNatural:carry: 
+                      (aNatural divBase)
+                        ((d2 + 1) div: (aNatural base))))
+            (self first:rest: fst rst)})}))
+
+    ;; OLD ;;
+    ; private helper method carryIntoNatural
+    ; if c is 0, return aNatural
+    ; if c is 1, add to aNatural
+    ;(method carryIntoNatural:carry: (aNatural c)
+      ;(c = 0) ifTrue:ifFalse:
+        ;{aNatural}
+        ;{(aNatural isZero) ifTrue:ifFalse:
+          ;{(Natural fromSmall: c)}
+          ;; first = (d + 1) mod base
+          ;; rest = carryIntoNatural:carry: m ((d + 1) div base)
+          ;{(self first:rest:
+            ;(((aNatural modBase) + 1) mod: (self base))
+              ;(self carryIntoNatural:carry:
+                ;(aNatural divBase)
+                  ;(((aNatural modBase) + 1) div: (self base))))}})
+    ;; END OLD ;;
 
 
-    ;; Compute the difference self − (aNatural + c),
-    ;; where c is a borrow bit (either 0 or 1).
-    ;; If the difference is nonnegative, answer the difference;
-    ;; otherwise, halt the program with a checked run-time error.
+    ; Compute the difference self − (aNatural + c),
+    ; where c is a borrow bit (either 0 or 1).
+    ; If the difference is nonnegative, answer the difference;
+    ; otherwise, halt the program with a checked run-time error.
     (method minus:borrow: (aNatural c)
-      (aNatural isZero) ifTrue:ifFalse:
-        {self borrowFromNat:borrow: aNatural c}
-        {(self error: 'Natural-subtraction-went-negative)})
+      ((aNatural isZero) ifTrue:ifFalse:
+        {(self borrowFromNat:borrow: aNatural c)}
+        {(self error: 'Natural-subtraction-went-negative)}))
 
     ; private helper method borrowFromNat
     (method borrowFromNat:borrow: (aNatural c)
-      (c = 0) ifTrue:ifFalse:
-        {(NatZero ne
-        {(self error: 'Natural-subtraction-went-negative)})
+      ((c = 0) ifTrue:ifFalse:
+        {(NatZero new)}
+        {(self error: 'Natural-subtraction-went-negative)}))
 
     ;;;; end private instance methods ;;;;
 )
@@ -346,13 +380,16 @@
 (class NatNonzero
     [subclass-of Natural]
 
+    ; instance variables
+    [ivars b d m]
+
     ;;;; private class methods ;;;;
 
     ; Answers a Natural number representing anInteger + aNatural · b
     (class-method first:rest: (anInteger aNatural)
       (((aNatural isZero) and: {(anInteger = 0)}) ifTrue:ifFalse:
         {(NatZero new)}
-          {(NatNonzero initFirst:rest: anInteger aNatural)}))
+        {(NatNonzero initFirst:rest: anInteger aNatural)}))
 
     (class-method initFirst:rest: (anInteger aNatural)
       ((self new) setFirst:rest: anInteger aNatural))
@@ -376,20 +413,22 @@
     (method + (aNatural) (self plus:carry: aNatural 0))
 
 
-    ;; In progress
+    ;; In progress ;;
+    ;; TODO ;;
     ; (mb + d) (m'b' + d') = mm'bb' + mbd' + m'b'd + dd'
-    (method * (aNatural) 
-      ((aNatural isZero) ifTrue:ifFalse:
-        {NatZero}
-        { ((((self m) * (aNatural divBase)) * ((self base) * (aNatural base))) + (self mult:Carry (aNatural) (0)))
-         + (((aNatural mult:Carry (self) (0)) * (self modBase)) + ((self modBase) * (aNatural modBase))) }))
+    ;(method * (aNatural) 
+      ;((aNatural isZero) ifTrue:ifFalse:
+        ;{NatZero}
+        ;{ ((((self m) * (aNatural divBase)) * ((self base) * (aNatural base))) + (self mult:Carry (aNatural) (0)))
+        ; + (((aNatural mult:Carry (self) (0)) * (self modBase)) + ((self modBase) * (aNatural modBase))) }))
 
-
-    (method mult:Carry: (aNatural c)
-      [locals c']
-      (set c' ((self modBase) * aNatural) + c)
-      return ((c' modBase) + (((self divBase) mult:Carry (aNatural) (c' divBase)) multBase)))
+    ;; TODO ;;
+    ;(method mult:Carry: (aNatural c)
+     ; [locals c']
+      ;(set c' ((self modBase) * aNatural) + c)
+      ;return ((c' modBase) + (((self divBase) mult:Carry (aNatural) (c' divBase)) multBase)))
  
+    ;; TODO :;
     ; m * b + d div: n
     ; m * b + d mod: n
     ; (method sdivmod:with: (n aBlock) (aBlock value:value: (m * b + d div: n) (m * b + d mod: n)))
@@ -401,6 +440,14 @@
     (method decimal-helper: (aList)
       ((self sdiv: 10) decimal-helper: (aList addFirst: (self smod: 10))))
 
+    ; private method
+    ; analogous to decimal but uses the base of Natural
+    (method base-rep () (self base-rep-helper: (List new)))
+
+    ; private base-rep-helper
+    (method base-rep-helper: (aList)
+      ((self divBase) base-rep-helper: (aList addFirst: (self modBase))))
+
     (method isZero () false)
 
     ;;;; private instance methods ;;;;
@@ -410,54 +457,77 @@
     ; else add self + aNatural + c
     (method plus:carry: (aNatural c)
       [locals m1 m2 d1 d2 d' c']
-      (set m1 (self m))
-      (set m2 (aNatural divBase))
-      (set d1 (self d))
-      (set d2 (aNatural modBase))
-      (set d' (((d1 + d2) + c) mod: (aNatural base))) ; d' = (d1 + d2 + c) mod base
-      (set c' (((d1 + d2) + c) div: (aNatural base))) ; c’ = (d1 + d2 + c) div base
-
-
+      
       ((aNatural isZero) ifTrue:ifFalse:
+
         ; if aNatural is zero, add self + c
         {(aNatural plus:carry: self c)}
 
         ; else, return first:rest: (d') (m1 plus:carry: m2 c')
-        {(self first:rest: d' (m1 plus:carry: m2 c'))}))
+        {(set m1 m)
+          (set m2 (aNatural divBase))
+          (set d1 d)
+          (set d2 (aNatural modBase))
+          (set d' (((d1 + d2) + c) mod: (self base))) ; d' = (d1 + d2 + c) mod base
+          (set c' (((d1 + d2) + c) div: (self base))) ; c’ = (d1 + d2 + c) div base
+
+          (self first:rest: d' (m1 plus:carry: m2 c'))}))
 
 
-    ; Compute the difference self − (aNatural + c),
+     ; Compute the difference self − (aNatural + c),
     ; where c is a borrow bit (either 0 or 1).
     ; If the difference is nonnegative, answer the difference;
     ; otherwise, halt the program with a checked run-time error.
     (method minus:borrow: (aNatural c)
       [locals m1 m2 d1 d2 d' c']
-      (set m1 (self m))
-      (set m2 (aNatural divBase))
-      (set d1 (self d))
-      (set d2 (aNatural modBase))
-      (set d' (((d1 - d2) - c) mod: (self case))) ; d' = (d1 - d2 - b) mod base
 
-      (aNatural isZero) ifTrue:ifFalse:
+      ((aNatural isZero) ifTrue:ifFalse:
         ; if aNatural is zero, self - c
         {(self borrowFromNat:borrow: (NatZero new) c)}
 
         ; else, self - aNatural - c
-        
         ; c’ = if d1 - d2 - c < 0 then 1 else 0
         ; return first:rest: (m1 minus:borrow: m2 c’) d
-        {(self leftAsExercise)})
+        {(set m1 m)
+          (set m2 (aNatural divBase))
+          (set d1 d)
+          (set d2 (aNatural modBase))
+          (set d' (((d1 - d2) - c) mod: (self base))) ; d' = (d1 - d2 - b) mod base
+          (self leftAsExercise)}))
 
     ; private helper method borrowFromNat
     (method borrowFromNat:borrow: (aNatural c)
-      (c = 0) ifTrue:ifFalse:
+      ((c = 0) ifTrue:ifFalse:
         {(self leftAsExercise)}
-        {(self leftAsExercise)})
+        {(self leftAsExercise)}))
 
     ;;;; end private instance methods ;;;;
 )
 
-;;;;;;;;;; TESTING FOR CLASS NATURAL AND SUBCLASSES ;;;;;;;;;;
+;;;;;;;;;; TESTING FOR CLASS NATURAL ;;;;;;;;;;
+
+;((Natural fromSmall: 0) printrep)
+;((Natural fromSmall: 1) printrep)
+;((Natural fromSmall: 10) printrep)
+;((Natural fromSmall: 15) printrep)
+;((Natural fromSmall: 16) printrep)
+;((Natural fromSmall: 17) printrep)
+;((Natural fromSmall: 127) printrep)
+;((Natural fromSmall: 128) printrep)
+;((Natural fromSmall: 129) printrep)
+;((Natural fromSmall: 143) printrep)
+
+;(((Natural fromSmall: 0) + (Natural fromSmall: 0)) printrep) ; 0 + 0
+;(((Natural fromSmall: 0) + (Natural fromSmall: 1)) printrep) ; 0 + 1
+;(((Natural fromSmall: 1) + (Natural fromSmall: 0)) printrep) ; 1 + 0
+;(((Natural fromSmall: 0) + (Natural fromSmall: 10)) printrep) ; 0 + 10
+;(((Natural fromSmall: 10) + (Natural fromSmall: 0)) printrep) ; 10 + 0
+;(((Natural fromSmall: 0) + (Natural fromSmall: 16)) printrep) ; 0 + 16
+;(((Natural fromSmall: 16) + (Natural fromSmall: 0)) printrep) ; 16 + 0
+;(((Natural fromSmall: 0) + (Natural fromSmall: 143)) printrep) ; 0 + 143
+;(((Natural fromSmall: 143) + (Natural fromSmall: 0)) printrep) ; 143 + 0
+
+((Natural fromSmall: 1) + (Natural fromSmall: 1)) ; 1 + 1
 
 (check-print (Natural fromSmall: 0)  0)
 ;(check-print (Natural fromSmall: 1)  1)
