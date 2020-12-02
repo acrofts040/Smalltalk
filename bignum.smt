@@ -365,6 +365,7 @@
     (method minus:borrow: (aNatural c)
       [locals m1 m2 d1 d2 d' c'] 
       ((aNatural isZero) ifTrue:ifFalse:
+        
         ; if aNatural is zero, self - c
         {(self borrowFromNat:borrow: self c)}
 
