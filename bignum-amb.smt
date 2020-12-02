@@ -703,6 +703,15 @@
 ;(check-print (Natural fromSmall: 143) 143)
 
 
+;; Subtract Tests
+(((Natural fromSmall: 28) - (Natural fromSmall: 18)) printrep)
+(((Natural fromSmall: 28) - (Natural fromSmall: 27)) printrep)
+(((Natural fromSmall: 28) - (Natural fromSmall: 12)) printrep)
+(((Natural fromSmall: 28) - (Natural fromSmall: 9)) printrep)
+(((Natural fromSmall: 288) - (Natural fromSmall: 70)) printrep)
+
+
+
 ;;;;;;;;;; END TESTING ;;;;;;;;;;
 
 (class SmallInteger
