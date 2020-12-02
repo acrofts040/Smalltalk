@@ -423,22 +423,22 @@
         {((LargePositiveInteger new) magnitude: (Natural new: anInteger))}))
   
   ; Answer the sum of the argument and the receiver.
-  (method addSmallIntegerTo: (aSmallInteger) (self leftAsExercise))
+  (method addSmallIntegerTo: (aSmallInteger) (self subclassResponsibility))
 
   ; Answer the sum of the argument and the receiver.
-  (method addLargePositiveIntegerTo: (aLargePositiveInteger) (self leftAsExercise))
+  (method addLargePositiveIntegerTo: (aLargePositiveInteger) (self subclassResponsibility))
 
   ; Answer the sum of the argument and the receiver.
-  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger) (self leftAsExercise))
+  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger) (self subclassResponsibility))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyBySmallInteger: (aSmallInteger) (self leftAsExercise))
+  (method multiplyBySmallInteger: (aSmallInteger) (self subclassResponsibility))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) (self leftAsExercise))
+  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) (self subclassResponsibility))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self leftAsExercise))
+  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self subclassResponsibility))
 
 
   (method asLargeInteger () self)
@@ -458,16 +458,49 @@
   (method smod: (aSmallInteger) (self leftAsExercise))
 )
 (class LargePositiveInteger
-	[subclass-of LargeInteger]
+  [subclass-of LargeInteger]
 
-    ; instance variables
-    [ivars ]
+
+  ; Answer the sum of the argument and the receiver.
+  (method addSmallIntegerTo: (aSmallInteger) (self leftAsExercise))
+
+  ; Answer the sum of the argument and the receiver.
+  (method addLargePositiveIntegerTo: (aLargePositiveInteger) (self leftAsExercise))
+
+  ; Answer the sum of the argument and the receiver.
+  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyBySmallInteger: (aSmallInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self leftAsExercise))
+
 )
 (class LargeNegativeInteger
-	[subclass-of LargeInteger]
+  [subclass-of LargeInteger]
 
-    ; instance variables
-    [ivars ]
+  ; Answer the sum of the argument and the receiver.
+  (method addSmallIntegerTo: (aSmallInteger) (self leftAsExercise))
+
+  ; Answer the sum of the argument and the receiver.
+  (method addLargePositiveIntegerTo: (aLargePositiveInteger) (self leftAsExercise))
+
+  ; Answer the sum of the argument and the receiver.
+  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyBySmallInteger: (aSmallInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self leftAsExercise))
+
 )
 (class SmallInteger
     [subclass-of Integer] ; primitive representation
