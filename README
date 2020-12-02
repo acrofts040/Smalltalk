@@ -6,6 +6,21 @@ Partner: Andrew Crofts
 
 The names of the people with whom you collaborated:
 TAs:
+	Andrew Cervantes
+	Yang
+	Matt Ahrens
+
+
+;; ASK ABOUT
+
+;; LISTS VS. ARRAY????
+;; check-expect failed: expected
+;;  ((Natural fromSmall: 0) decimal) to be similar to ( 0 )
+;;  (from evaluating <Array>), but it's List( 0 )
+
+;; ASK ABOUT DIV/MOD BY 0
+
+;; ASK ABOUT FAILING TESTS FOR HUGE NUMBERS
   
 
 
