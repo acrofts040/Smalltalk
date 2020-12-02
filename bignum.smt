@@ -169,7 +169,10 @@
     (method + (aNatural) (self plus:carry: aNatural 0))
     (method * (aNatural) (NatZero new))
 
-    (method sdivmod:with: (n aBlock) (aBlock value:value: (NatZero new) 0))
+    (method sdivmod:with: (n aBlock)
+      ((n = 0) ifTrue:ifFalse:
+        {(self error: 'Cannot-perform-division-or-mod-by-0)}
+        {(aBlock value:value: (NatZero new) 0)}))
 
     (method decimal () ((List new) addFirst: 0))
 
@@ -301,22 +304,23 @@
     ;    r = (d + r′ · b) mod n
     (method sdivmod:with: (n aBlock)
       [locals Q r Q' r' q0]
+      ((n = 0) ifTrue:ifFalse:
+        {(self error: 'Cannot-perform-division-or-mod-by-0)}
+        {(set r' (m smod: n))
+          (set Q' (m sdiv: n))
 
-      (set r' (m smod: n))
-      (set Q' (m sdiv: n))
+          ((r' = 0) ifTrue:ifFalse:
+            {(set q0 (d div: n))
+             (set r  (d mod: n))}
+            
+            {(set q0 (((r' * (Natural base)) + d) div: n))
+             (set r  (((r' * (Natural base)) + d) mod: n))})
 
-      ((r' = 0) ifTrue:ifFalse:
-        {(set q0 (d div: n))
-         (set r  (d mod: n))}
-        
-        {(set q0 (((r' * (Natural base)) + d) div: n))
-         (set r  (((r' * (Natural base)) + d) mod: n))})
-
-      ((Q' isZero) ifTrue:ifFalse:
-        {(set Q (Natural fromSmall: q0))}
-        {(set Q ((Q' timesBase) + (Natural fromSmall: q0)))})
-     
-      (aBlock value:value: Q r))
+          ((Q' isZero) ifTrue:ifFalse:
+            {(set Q (Natural fromSmall: q0))}
+            {(set Q ((Q' timesBase) + (Natural fromSmall: q0)))})
+         
+          (aBlock value:value: Q r)}))
 
 
     (method decimal () (self decimal-helper: (List new)))
@@ -365,7 +369,7 @@
     (method minus:borrow: (aNatural c)
       [locals m1 m2 d1 d2 d' c'] 
       ((aNatural isZero) ifTrue:ifFalse:
-        
+
         ; if aNatural is zero, self - c
         {(self borrowFromNat:borrow: self c)}
 
