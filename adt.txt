@@ -1,0 +1,22 @@
+;;;;;;;;;;;;;;;;;;; COMP 105 SMALL ASSIGNMENT ;;;;;;;;;;;;;;;
+;; adt.txt
+;; COMP 105 - hw9 small
+;; Fall 2020
+
+;; Name: Ann Marie Burke (aburke04)
+;; Partner: Andrew Crofts
+
+
+In a new file adt.txt, summarize your design work:
+
+For each concrete class you defined to represent natural numbers in exercise 37,
+
+    - List the instance variables.
+    - Copy and paste the class’s abstraction function and invariant.
+
+For the natural numbers, explain in one or two sentences why you chose the representation that you did. In addition, please tell us what went well and if you have any regrets.
+
+For each concrete class you defined to represent large integers in exercise 38,
+
+    - List the instance variables.
+    - Copy and paste the class’s abstraction function and invariant.
