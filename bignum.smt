@@ -394,6 +394,16 @@
 
 )
 ; starter code copied from COMP 105 spec
+
+;; 38
+;; Arbitrary-precision signed-integer arithmetic. Using sign-magnitude representation,
+;; implement large signed integers, as described in Section 10.7.3.
+;; Define whatever methods are needed to answer not only the large-integer protocol
+;; but also the Integer, Number, Magnitude, and Object protocols, except for div: and mod:.
+;; You may find it most useful to focus on methods print, isNegative, isNonnegative, isStrictlyPositive, negated, +, *, and sdiv:.
+;; So that small-integer arguments can be passed to large-integer methods, use reflection to add an asLargeInteger method to class SmallInteger.
+
+
 (class LargeInteger
   [subclass-of Integer]
   [ivars magnitude]
@@ -411,6 +421,26 @@
         {(((self fromSmall: 1) + (self fromSmall: ((anInteger + 1) negated)))
           negated)}
         {((LargePositiveInteger new) magnitude: (Natural new: anInteger))}))
+  
+  ; Answer the sum of the argument and the receiver.
+  (method addSmallIntegerTo: (aSmallInteger) (self leftAsExercise))
+
+  ; Answer the sum of the argument and the receiver.
+  (method addLargePositiveIntegerTo: (aLargePositiveInteger) (self leftAsExercise))
+
+  ; Answer the sum of the argument and the receiver.
+  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyBySmallInteger: (aSmallInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) (self leftAsExercise))
+
+  ; Answer the product of the argument and the receiver.
+  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self leftAsExercise))
+
+
   (method asLargeInteger () self)
   (method isZero () (magnitude isZero))
   (method = (anInteger) ((self - anInteger)     isZero))
@@ -419,8 +449,25 @@
   (method div: (_) (self error: 'long-division-not-supported))
   (method mod: (_) (self error: 'long-division-not-supported))
 
+  ; Answer the largest natural number whose value is
+  ; at most the quotient of the receiver and the argument.
   (method sdiv: (aSmallInteger) (self leftAsExercise))
+
+  ; Answer a small integer which is the remainder
+  ; when the receiver is divided by the argument.
   (method smod: (aSmallInteger) (self leftAsExercise))
+)
+(class LargePositiveInteger
+	[subclass-of LargeInteger]
+
+    ; instance variables
+    [ivars ]
+)
+(class LargeNegativeInteger
+	[subclass-of LargeInteger]
+
+    ; instance variables
+    [ivars ]
 )
 (class SmallInteger
     [subclass-of Integer] ; primitive representation
