@@ -10,18 +10,6 @@
 
 ;;;;;;;;;; TESTING FOR CLASS NATURAL ;;;;;;;;;;
 
-;; printrep tests for creating new natural numbers
-; ((Natural fromSmall: 0) printrep)
-; ((Natural fromSmall: 1) printrep)
-; ((Natural fromSmall: 10) printrep)
-; ((Natural fromSmall: 15) printrep)
-; ((Natural fromSmall: 16) printrep)
-; ((Natural fromSmall: 17) printrep)
-; ((Natural fromSmall: 127) printrep)
-; ((Natural fromSmall: 128) printrep)
-; ((Natural fromSmall: 129) printrep)
-((Natural fromSmall: 143) printrep)
-
 ;; check-assert tests for =
 (check-assert ((Natural fromSmall: 0) = (Natural fromSmall: 0)))
 (check-assert ((Natural fromSmall: 1) = (Natural fromSmall: 1)))
@@ -84,15 +72,15 @@
 (check-assert (((Natural fromSmall: 1) >= (Natural fromSmall: 798)) not))
 
 ;; printrep tests for adding nat + 0
-;(((Natural fromSmall: 0) + (Natural fromSmall: 0)) printrep) ; 0 + 0
-;(((Natural fromSmall: 0) + (Natural fromSmall: 1)) printrep) ; 0 + 1
-;(((Natural fromSmall: 1) + (Natural fromSmall: 0)) printrep) ; 1 + 0
-;(((Natural fromSmall: 0) + (Natural fromSmall: 10)) printrep) ; 0 + 10
-;(((Natural fromSmall: 10) + (Natural fromSmall: 0)) printrep) ; 10 + 0
-;(((Natural fromSmall: 0) + (Natural fromSmall: 16)) printrep) ; 0 + 16
-;(((Natural fromSmall: 16) + (Natural fromSmall: 0)) printrep) ; 16 + 0
-;(((Natural fromSmall: 0) + (Natural fromSmall: 143)) printrep) ; 0 + 143
-(((Natural fromSmall: 143) + (Natural fromSmall: 0)) printrep) ; 143 + 0
+(check-print ((Natural fromSmall: 0) + (Natural fromSmall: 0)) 0)
+(check-print ((Natural fromSmall: 0) + (Natural fromSmall: 1)) 1)
+(check-print ((Natural fromSmall: 1) + (Natural fromSmall: 0)) 1)
+(check-print ((Natural fromSmall: 0) + (Natural fromSmall: 10)) 10)
+(check-print ((Natural fromSmall: 10) + (Natural fromSmall: 0)) 10)
+(check-print ((Natural fromSmall: 0) + (Natural fromSmall: 16)) 16)
+(check-print ((Natural fromSmall: 16) + (Natural fromSmall: 0)) 16)
+(check-print ((Natural fromSmall: 0) + (Natural fromSmall: 143)) 143)
+(check-print ((Natural fromSmall: 143) + (Natural fromSmall: 0)) 143)
 
 ;; tests for adding nonzero naturals
 (check-print ((Natural fromSmall: 1)   + (Natural fromSmall: 1)) 2)
