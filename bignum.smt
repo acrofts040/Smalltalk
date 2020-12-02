@@ -229,7 +229,9 @@
             [block (x) x]
             {(self error: 'Natural-subtraction-went-negative)}))
     (method subtract:withDifference:ifNegative: (aNatural diffBlock exnBlock)
-      (self minus:borrow: aNatural 0)) ;; TODO
+      ((self < aNatural) ifTrue:ifFalse:
+        {exnBlock}
+        {(diffBlock value: (self minus:borrow: aNatural 0))}))
 
     (method sdiv: (n) (self sdivmod:with: n [block (q r) q]))
     (method smod: (n) (self sdivmod:with: n [block (q r) r]))
@@ -430,15 +432,14 @@
       [locals m1 m2 d1 d2 b]
       ((aNatural isZero) ifTrue:ifFalse:
         {(NatZero new)}
-        { 
-
-          (set m1 m)
-          (set m2 (aNatural divBase))
-          (set d1 d)
-          (set d2 (aNatural modBase))
-          (set b (Natural base))
-          (((Natural fromSmall: (d1 * d2)) + (((m1 * (Natural fromSmall: d2))  +  (m2 * (Natural fromSmall: d1))) timesBase)) + (((m1 * m2) timesBase)timesBase)
-          )})) 
+        {(set m1 m)
+         (set m2 (aNatural divBase))
+         (set d1 d)
+         (set d2 (aNatural modBase))
+         (set b (Natural base))
+          (((Natural fromSmall: (d1 * d2))
+            + (((m1 * (Natural fromSmall: d2)) + (m2 * (Natural fromSmall: d1))) timesBase))
+            + (((m1 * m2) timesBase)timesBase))}))
 
 
 
@@ -665,6 +666,9 @@
 (((Natural fromSmall: 2) * (Natural fromSmall: 27)) printrep)
 (((Natural fromSmall: 12) * (Natural fromSmall: 12)) printrep)
 (((Natural fromSmall: 122) * (Natural fromSmall: 227)) printrep)
+
+
+
 
 ;; check-expect tests
 ;(check-expect ((Natural fromSmall: 0) decimal) '( 0 ))
