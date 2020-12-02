@@ -399,16 +399,6 @@
 
 )
 ; starter code copied from COMP 105 spec
-
-;; 38
-;; Arbitrary-precision signed-integer arithmetic. Using sign-magnitude representation,
-;; implement large signed integers, as described in Section 10.7.3.
-;; Define whatever methods are needed to answer not only the large-integer protocol
-;; but also the Integer, Number, Magnitude, and Object protocols, except for div: and mod:.
-;; You may find it most useful to focus on methods print, isNegative, isNonnegative, isStrictlyPositive, negated, +, *, and sdiv:.
-;; So that small-integer arguments can be passed to large-integer methods, use reflection to add an asLargeInteger method to class SmallInteger.
-
-
 (class LargeInteger
   [subclass-of Integer]
   [ivars magnitude]
@@ -425,15 +415,15 @@
      ((anInteger isNegative) ifTrue:ifFalse: 
         {(((self fromSmall: 1) + (self fromSmall: ((anInteger + 1) negated)))
           negated)}
-        {((LargePositiveInteger new) magnitude: (Natural new: anInteger))}))
+        {((LargePositiveInteger new) magnitude: (Natural fromSmall: anInteger))}))
   
   (method asLargeInteger () self)
   (method isZero () (magnitude isZero))
   (method = (anInteger) ((self - anInteger)     isZero))
   (method < (anInteger) ((self - anInteger) isNegative))
 
-  (method +   (aNumber)     (self subclassResponsibility))
-  (method *   (aNumber)     (self subclassResponsibility))
+  (method +   (anInteger)     (self subclassResponsibility))
+  (method *   (anInteger)     (self subclassResponsibility))
   (method negated    ()     (self subclassResponsibility))
 
   ; Answer the sum of the argument and the receiver.
@@ -455,12 +445,13 @@
   (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self subclassResponsibility))
 
 
-  (method div: (_) (self error: 'long-division-not-supported))
+  ;(method div: (_) (self error: 'long-division-not-supported))
+  (method div: (n) (self sdiv: n))
   (method mod: (_) (self error: 'long-division-not-supported))
 
   ; Answer the largest natural number whose value is
   ; at most the quotient of the receiver and the argument.
-  (method sdiv: (aSmallInteger) (self leftAsExercise))
+  (method sdiv: (aSmallInteger) (self subclassResponsibility))
 
   ; Answer a small integer which is the remainder
   ; when the receiver is divided by the argument.
@@ -479,38 +470,58 @@
       {(decimals addFirst: ’-)})
     decimals)
 
-  (method print () ('print print) (self leftAsExercise))
+  (method print () ((self decimal) do: [block (x) (x print)]))
 )
 (class LargePositiveInteger
   [subclass-of LargeInteger]
 
-  (method +   (aNumber)     (aNumber addLargePositiveIntegerTo: self))
-  (method *   (aNumber)     (aNumber multiplyByLargePositiveInteger: self))
-  (method negated    ()     (self leftAsExercise))
+  (method + (anInteger) (anInteger addLargePositiveIntegerTo: self))
+  (method * (anInteger) (anInteger multiplyByLargePositiveInteger: self))
+  (method negated ()
+    ((magnitude isZero) ifTrue:ifFalse:
+      {(LargePositiveInteger withMagnitude: magnitude)}
+      {(LargeNegativeInteger withMagnitude: magnitude)}))
+
+  (method sdiv: (anInteger)
+    ((anInteger isStrictlyPositive) ifTrue:ifFalse: 
+       {(LargePositiveInteger withMagnitude:  (magnitude sdiv: anInteger))}
+       {((((self - (LargeInteger fromSmall: anInteger)) - (LargeInteger fromSmall: 1))
+             sdiv: (anInteger negated))
+            negated)}))
 
   ;;;; private methods ;;;;
 
   ; Answer the sum of the argument and the receiver.
-  (method addSmallIntegerTo: (aSmallInteger) (self leftAsExercise))
+  (method addSmallIntegerTo: (aSmallInteger) (self + (aSmallInteger asLargeInteger)))
 
   ; Answer the sum of the argument and the receiver.
-  (method addLargePositiveIntegerTo: (aLargePositiveInteger) (self leftAsExercise))
+  (method addLargePositiveIntegerTo: (aLargePositiveInteger)
+    (LargePositiveInteger withMagnitude: (magnitude + (aLargePositiveInteger magnitude))))
 
   ; Answer the sum of the argument and the receiver.
-  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger) (self leftAsExercise))
+  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger)
+    [locals p n]
+    (set p magnitude)
+    (set n (aLargeNegativeInteger magnitude))
+
+    ((p >= n) ifTrue:ifFalse:
+      {(LargePositiveInteger withMagnitude: (p - n))}
+      {(LargeNegativeInteger withMagnitude: (n - p))}))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyBySmallInteger: (aSmallInteger) (self leftAsExercise))
+  (method multiplyBySmallInteger: (aSmallInteger) (self * (aSmallInteger asLargeInteger)))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) (self leftAsExercise))
+  (method multiplyByLargePositiveInteger: (aLargePositiveInteger)
+    (LargePositiveInteger withMagnitude: (magnitude * (aLargePositiveInteger magnitude))))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self leftAsExercise))
+  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger)
+    (LargeNegativeInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude))))
 
   (method isNegative         () false)
   (method isNonnegative      () true)
-  (method isStrictlyPositive () ((self isZero) not))
+  (method isStrictlyPositive () ((magnitude isZero) not))
 
   ;;;; end private methods ;;;;
 
@@ -518,32 +529,40 @@
 (class LargeNegativeInteger
   [subclass-of LargeInteger]
 
-  (method +   (aNumber)     (aNumber addLargeNegativeIntegerTo: self))
-  (method *   (aNumber)     (aNumber multiplyByLargeNegativeInteger: self))
-  (method negated    ()     (self leftAsExercise))
+  (method + (anInteger) (anInteger addLargeNegativeIntegerTo: self))
+  (method * (anInteger) (anInteger multiplyByLargeNegativeInteger: self))
+  (method negated ()
+    (LargePositiveInteger withMagnitude: magnitude))
+
+  (method sdiv: (anInteger)
+    ((self negated) sdiv: (anInteger negated)))
 
   ;;;; private methods ;;;;
 
   ; Answer the sum of the argument and the receiver.
-  (method addSmallIntegerTo: (aSmallInteger) (self leftAsExercise))
+  (method addSmallIntegerTo: (aSmallInteger) (self + (aSmallInteger asLargeInteger)))
 
   ; Answer the sum of the argument and the receiver.
-  (method addLargePositiveIntegerTo: (aLargePositiveInteger) (self leftAsExercise))
+  (method addLargePositiveIntegerTo: (aLargePositiveInteger)
+    (aLargePositiveInteger addLargeNegativeIntegerTo: self))
 
   ; Answer the sum of the argument and the receiver.
-  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger) (self leftAsExercise))
+  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger)
+    (LargeNegativeInteger withMagnitude: (magnitude + (aLargeNegativeInteger magnitude))))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyBySmallInteger: (aSmallInteger) (self leftAsExercise))
+  (method multiplyBySmallInteger: (aSmallInteger) (self * (aSmallInteger asLargeInteger)))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) (self leftAsExercise))
+  (method multiplyByLargePositiveInteger: (aLargePositiveInteger)
+    (LargeNegativeInteger withMagnitude: (magnitude * (aLargePositiveInteger magnitude))))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self leftAsExercise))
+  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger)
+    (LargePositiveInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude))))
 
   (method isNegative         () true)
-  (method isNonnegative      () (self isZero))
+  (method isNonnegative      () (magnitude isZero))
   (method isStrictlyPositive () false)
 
   ;;;; end private methods ;;;;

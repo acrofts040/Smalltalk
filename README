@@ -18,16 +18,16 @@ TAs:
 ;;  ((Natural fromSmall: 0) decimal) to be similar to ( 0 )
 ;;  (from evaluating <Array>), but it's List( 0 )
 
-;; ASK ABOUT DIV/MOD BY 0
+;; ASK ABOUT FAILING TESTS FOR HUGE NUMBERS - CPU TIME EXHAUSTED
 
-;; ASK ABOUT FAILING TESTS FOR HUGE NUMBERS
+;; ASK ABOUT PRINT FOR LARGE INTS
   
 
 
 A list identifying which problems you solved:
-    - 37 p. 731
-    - 38 p. 732
-    - 39 p. 732
+    - 37
+    - 38
+    - 39
     - T
     - ADT
 
