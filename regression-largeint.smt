@@ -89,7 +89,6 @@
 (check-print ((LargeInteger fromSmall: 12463556) negated) -12463556)
 (check-print ((LargeInteger fromSmall: 2147483646) negated) -2147483646)
 
-
 ;; tests for isNegative
 (check-assert (((LargeInteger fromSmall: 1) negated) isNegative))
 (check-assert (((LargeInteger fromSmall: 31543653) negated) isNegative))
@@ -158,8 +157,6 @@
 (check-print ((LargeInteger fromSmall: -12234) + (LargeInteger fromSmall: -100)) -12334)
 (check-print ((LargeInteger fromSmall: -100) + (LargeInteger fromSmall: -19457652)) -19457752)
 (check-print ((LargeInteger fromSmall: -2147483646) + (LargeInteger fromSmall: -1)) -2147483647)
-
-('test-multiplying println)
 
 ;; tests for multiplying * 0
 (check-print ((LargeInteger fromSmall: 1)      * (LargeInteger fromSmall: 0)) 0)
