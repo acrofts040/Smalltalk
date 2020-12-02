@@ -404,10 +404,12 @@
   [ivars magnitude]
 
   (class-method withMagnitude: (aNatural)
-      ((self new) magnitude: aNatural))
+    ((aNatural isZero) ifTrue:ifFalse:
+      {((LargePositiveInteger new) magnitude: aNatural)}
+      {((self new) magnitude: aNatural)}))
   (method magnitude: (aNatural) ; private, for initialization
-      (set magnitude aNatural)
-      self)
+    (set magnitude aNatural)
+    self)
 
   (method magnitude () magnitude)
 
@@ -467,7 +469,7 @@
   (method decimal () [locals decimals]
     (set decimals (magnitude decimal))
     ((self isNegative) ifTrue:
-      {(decimals addFirst: ’-)})
+      {(decimals addFirst: '-)})
     decimals)
 
   (method print () ((self decimal) do: [block (x) (x print)]))
@@ -517,7 +519,9 @@
 
   ; Answer the product of the argument and the receiver.
   (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger)
-    (LargeNegativeInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude))))
+    (((aLargeNegativeInteger magnitude) isZero) ifTrue:ifFalse:
+      {(LargePositiveInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude)))}
+      {(LargeNegativeInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude)))}))
 
   (method isNegative         () false)
   (method isNonnegative      () true)
