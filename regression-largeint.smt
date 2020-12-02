@@ -159,6 +159,8 @@
 (check-print ((LargeInteger fromSmall: -100) + (LargeInteger fromSmall: -19457652)) -19457752)
 (check-print ((LargeInteger fromSmall: -2147483646) + (LargeInteger fromSmall: -1)) -2147483647)
 
+('test-multiplying println)
+
 ;; tests for multiplying * 0
 (check-print ((LargeInteger fromSmall: 1)      * (LargeInteger fromSmall: 0)) 0)
 (check-print ((LargeInteger fromSmall: 134656) * (LargeInteger fromSmall: 0)) 0)

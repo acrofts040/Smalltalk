@@ -404,9 +404,8 @@
   [ivars magnitude]
 
   (class-method withMagnitude: (aNatural)
-    ((aNatural isZero) ifTrue:ifFalse:
-      {((LargePositiveInteger new) magnitude: aNatural)}
-      {((self new) magnitude: aNatural)}))
+    ((self new) magnitude: aNatural))
+
   (method magnitude: (aNatural) ; private, for initialization
     (set magnitude aNatural)
     self)
@@ -519,7 +518,7 @@
 
   ; Answer the product of the argument and the receiver.
   (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger)
-    (((aLargeNegativeInteger magnitude) isZero) ifTrue:ifFalse:
+    (((self magnitude) isZero) ifTrue:ifFalse:
       {(LargePositiveInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude)))}
       {(LargeNegativeInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude)))}))
 
@@ -559,7 +558,8 @@
 
   ; Answer the product of the argument and the receiver.
   (method multiplyByLargePositiveInteger: (aLargePositiveInteger)
-    (LargeNegativeInteger withMagnitude: (magnitude * (aLargePositiveInteger magnitude))))
+    (aLargePositiveInteger multiplyByLargeNegativeInteger: self))
+    ;(LargeNegativeInteger withMagnitude: (magnitude * (aLargePositiveInteger magnitude))))
 
   ; Answer the product of the argument and the receiver.
   (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger)
