@@ -295,7 +295,7 @@
     (method + (aNatural) (self plus:carry: aNatural 0))
     (method * (aNatural) (NatZero new))
 
-    (method sdivmod:with: (n aBlock) (aBlock value:value: 0 0))
+    (method sdivmod:with: (n aBlock) (aBlock value:value: (NatZero new) (NatZero new)))
 
     (method decimal () ((List new) addFirst: 0))
 
@@ -442,24 +442,34 @@
 
 
 
+    ; X = d + m· b
+    ; m / n = Q' + r'
+    ; X / n = Q · d + r
+    ;  Q = q0 + Q′· b
+    ;    q0 = (d + r′ · b) div n
+    ;    r = (d + r′ · b) mod n
 
+    (method sdivmod:with: (n aBlock)
+      [locals Q r Q' r' q0]
+      ((m smod: n) print)
+      ((m sdiv: n) print)
 
-   ;;       (((m1 * m2) * (b * b))) + (self mult:Carry: aNatural 0))
-   ;;      + ((aNatural mult:Carry: self 0) * (self modBase)) + (
-   ;;(self modBase) * (aNatural modBase)) }))
+      (set r' (m smod: n))
+      (set Q' (m sdiv: n))
 
+      ((r' isZero) ifTrue:ifFalse:
+        {(set q0 (Natural fromSmall: (d div: n)))
+         (set r  (Natural fromSmall: (d mod: n)))}
+        
+        {(set q0 (Natural fromSmall: ((d + (r' timesBase)) div: n)))
+         (set r  (Natural fromSmall: ((d + (r' timesBase)) mod: n)))})
 
-   ;; (method mult:Carry: (aNatural c)
-   ;;  [locals c']
-   ;;   (set c' ((  (Natural fromSmall: (self modBase)) * aNatural) ;; + c))
-   ;;   return ((c' modBase) + (((self divBase) mult:Carry: aNatural 
-   ;; (c' divBase)) multBase)))
+      ((Q' isZero) ifTrue:ifFalse:
+        {(set Q q0)}
+        {(set Q (q0 + (Q' timesBase)))})
+     
+      (aBlock value:value: Q r))
 
-    ;; TODO ;;
-    ; m * b + d div: n
-    ; m * b + d mod: n
-    ; (method sdivmod:with: (n aBlock) (aBlock value:value: (m * b + d div: n) (m * b + d mod: n)))
-    (method sdivmod:with: (n aBlock) (self leftAsExercise))
 
     (method decimal () (self decimal-helper: (List new)))
 
@@ -655,6 +665,10 @@
 (((Natural fromSmall: 2) * (Natural fromSmall: 27)) printrep)
 (((Natural fromSmall: 12) * (Natural fromSmall: 12)) printrep)
 (((Natural fromSmall: 122) * (Natural fromSmall: 227)) printrep)
+
+;; check-expect tests
+;(check-expect ((Natural fromSmall: 0) decimal) '( 0 ))
+;(check-expect ((Natural fromSmall: 1) decimal) '( 1 ))
 
 ;; check-print tests
 (check-print (Natural fromSmall: 0)  0)
