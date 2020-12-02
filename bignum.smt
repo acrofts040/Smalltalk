@@ -229,7 +229,7 @@
             [block (x) x]
             {(self error: 'Natural-subtraction-went-negative)}))
     (method subtract:withDifference:ifNegative: (aNatural diffBlock exnBlock)
-      (self leftAsExercise)) ;; TODO
+      (self minus:borrow: aNatural 0)) ;; TODO
 
     (method sdiv: (n) (self sdivmod:with: n [block (q r) q]))
     (method smod: (n) (self sdivmod:with: n [block (q r) r]))
@@ -500,17 +500,15 @@
 
           (return (NatNonzero first:rest: d' (m1 plus:carry: m2 c')))}))
 
-
     ; Compute the difference self − (aNatural + c),
     ; where c is a borrow bit (either 0 or 1).
     ; If the difference is nonnegative, answer the difference;
     ; otherwise, halt the program with a checked run-time error.
     (method minus:borrow: (aNatural c)
-      [locals m1 m2 d1 d2 d' c']
-
+      [locals m1 m2 d1 d2 d' c'] 
       ((aNatural isZero) ifTrue:ifFalse:
         ; if aNatural is zero, self - c
-        {(self borrowFromNat:borrow: (NatZero new) c)}
+        {(self borrowFromNat:borrow: self c)}
 
         ; else, self - aNatural - c
         ; c’ = if d1 - d2 - c < 0 then 1 else 0
@@ -520,15 +518,22 @@
           (set d1 d)
           (set d2 (aNatural modBase))
           (set d' (((d1 - d2) - c) mod: (Natural base))) ; d' = (d1 - d2 - b) mod base
-          (self leftAsExercise)}))
+          ((((d1 - d2) - c) < 0) ifTrue:ifFalse: 
+              {(set c' 1)}
+              {(set c' 0)})
+          (NatNonzero first:rest: d' (m1 minus:borrow: m2 c') )}))
 
     ; private helper method borrowFromNat
     (method borrowFromNat:borrow: (aNatural c)
       ((c = 0) ifTrue:ifFalse:
-        {(self leftAsExercise)}
-        {(self leftAsExercise)}))
+        {aNatural}  ;; NOTE IS IT SELF or ANAT
+        {(((aNatural modBase) = 0) ifTrue:ifFalse: 
+                {(NatNonzero first:rest: (self borrowFromNat:borrow: 
+                (aNatural divBase) 1) ((Natural base) - 1))}
+                {(NatNonzero first:rest: ((aNatural modBase) - 1) (aNatural divBase) )})}))
 
     ;;;; end private instance methods ;;;;
+
 )
 
 ;;;;;;;;;; TESTING FOR CLASS NATURAL ;;;;;;;;;;
