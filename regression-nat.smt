@@ -117,7 +117,6 @@
 (check-print ((Natural fromSmall: 12) * (Natural fromSmall: 12)) 144)
 (check-print ((Natural fromSmall: 122) * (Natural fromSmall: 227)) 27694)
 
-
 ;; check-print tests for sdiv:
 (check-print ((Natural fromSmall: 0) sdiv: 1) 0)
 (check-print ((Natural fromSmall: 0) sdiv: 194) 0)
@@ -146,10 +145,11 @@
 (check-error ((Natural fromSmall: 16) smod: 0))
 
 ;; check-expect tests
-;(check-expect ((Natural fromSmall: 0) decimal)     '( 0 ))
-;(check-expect ((Natural fromSmall: 1) decimal)     '( 1 ))
-;(check-expect ((Natural fromSmall: 15) decimal)    '( 1 5 ))
-;(check-expect ((Natural fromSmall: 12345) decimal) '( 1 2 3 4 5 ))
+(check-expect ((Natural fromSmall: 0) decimal)     '( 0 ))
+(check-expect ((Natural fromSmall: 1) decimal)     '( 1 ))
+(check-expect ((Natural fromSmall: 15) decimal)    '( 1 5 ))
+(check-expect ((Natural fromSmall: 12345) decimal) '( 1 2 3 4 5 ))
+(check-expect (((Natural fromSmall: 12345) + (Natural fromSmall: 1)) decimal) '( 1 2 3 4 6 ))
 
 ;; check-print tests
 (check-print (Natural fromSmall: 0)  0)
