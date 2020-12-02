@@ -132,30 +132,31 @@
 
 
 ;; check-print tests for sdiv:
-(check-print ((Natural fromSmall: 0) sdiv: 0) 0)   ; 0 / 0   = 0
-(check-print ((Natural fromSmall: 0) sdiv: 1) 0)   ; 0 / 1   = 0
-(check-print ((Natural fromSmall: 0) sdiv: 194) 0) ; 0 / 194 = 0
+(check-print ((Natural fromSmall: 0) sdiv: 1) 0)
+(check-print ((Natural fromSmall: 0) sdiv: 194) 0)
 
-(check-print ((Natural fromSmall: 1) sdiv: 10) 0)  ; 1 / 10  = 0
-(check-print ((Natural fromSmall: 1) sdiv: 16) 0)  ; 1 / 16  = 0
-(check-print ((Natural fromSmall: 15) sdiv: 10) 1) ; 15 / 10 = 1
-(check-print ((Natural fromSmall: 16) sdiv: 10) 1) ; 16 / 10 = 1
-(check-print ((Natural fromSmall: 16) sdiv: 1) 16)  ; 16 / 1  = 16
-(check-print ((Natural fromSmall: 16) sdiv: 1) 16)  ; 16 / 0  = 16????
-(check-print ((Natural fromSmall: 25) sdiv: 10) 2) ; 25 / 10 = 2
+(check-print ((Natural fromSmall: 1) sdiv: 10) 0)
+(check-print ((Natural fromSmall: 1) sdiv: 16) 0)
+(check-print ((Natural fromSmall: 15) sdiv: 10) 1)
+(check-print ((Natural fromSmall: 16) sdiv: 10) 1)
+(check-print ((Natural fromSmall: 16) sdiv: 1) 16)
+(check-print ((Natural fromSmall: 25) sdiv: 10) 2)
 
-;; print test for smod:
-; ((Natural fromSmall: 0) smod: 0)   ; 0 % 0   = 0
-; ((Natural fromSmall: 0) smod: 1)   ; 0 % 1   = 0
-; ((Natural fromSmall: 0) smod: 186) ; 0 % 186 = 0
+;(check-error ((Natural fromSmall: 0) sdiv: 0))
+;(check-error ((Natural fromSmall: 16) sdiv: 0))
 
-; ((Natural fromSmall: 1) smod: 10)  ; 1 % 10  = 1
-; ((Natural fromSmall: 1) smod: 16)  ; 1 % 16  = 1
-; ((Natural fromSmall: 15) smod: 10) ; 15 % 10 = 5
-; ((Natural fromSmall: 16) smod: 10) ; 16 % 10 = 6
-; ((Natural fromSmall: 16) smod: 1)  ; 16 % 1  = 0
-((Natural fromSmall: 16) smod: 1)  ; 16 % 0  = 0???
-((Natural fromSmall: 25) smod: 10) ; 25 % 10 = 5
+;; test for smod:
+(check-expect ((Natural fromSmall: 0) smod: 1) 0)
+(check-expect ((Natural fromSmall: 0) smod: 186) 0)
+(check-expect ((Natural fromSmall: 1) smod: 10) 1)
+(check-expect ((Natural fromSmall: 1) smod: 16) 1)
+(check-expect ((Natural fromSmall: 15) smod: 10) 5)
+(check-expect ((Natural fromSmall: 16) smod: 10) 6)
+(check-expect ((Natural fromSmall: 16) smod: 1) 0)
+(check-expect ((Natural fromSmall: 25) smod: 10) 5)
+
+;(check-error ((Natural fromSmall: 0) smod: 0))
+;(check-error ((Natural fromSmall: 16) smod: 0))
 
 ;; check-expect tests
 ;(check-expect ((Natural fromSmall: 0) decimal)     '( 0 ))
