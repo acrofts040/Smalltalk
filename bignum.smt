@@ -425,14 +425,6 @@
         {(((self fromSmall: 1) + (self fromSmall: ((anInteger + 1) negated)))
           negated)}
         {((LargePositiveInteger new) magnitude: (Natural fromSmall: anInteger))}))
-
-  ;; given in large-int.smt starter code
-  ; (class-method fromSmall: (anInteger)
-  ;    ((anInteger isNegative) ifTrue:ifFalse:
-  ;       {(((self fromSmall: 1) + (self fromSmall: ((anInteger + 1) negated)))
-  ;         negated)}
-  ;       {((LargePositiveInteger new) magnitude: (Natural new: anInteger))}))
-
   
   (method asLargeInteger () self)
   (method isZero () (magnitude isZero))
@@ -472,10 +464,7 @@
 
   ; Answer a small integer which is the remainder
   ; when the receiver is divided by the argument.
-  (method smod: (aSmallInteger)
-    ((aSmallInteger isStrictlyPositive) ifTrue:ifFalse: 
-        {(magnitude smod: aSmallInteger)}
-        {((magnitude smod: (aSmallInteger negated)) negated)}))
+  (method smod: (aSmallInteger) (self subclassResponsibility))
     
   (method isNegative         () (self subclassResponsibility))
   (method isNonnegative      () (self subclassResponsibility))
@@ -502,6 +491,8 @@
       {(LargePositiveInteger withMagnitude: magnitude)}
       {(LargeNegativeInteger withMagnitude: magnitude)}))
 
+  ;;;; private methods ;;;;
+
   (method sdiv: (anInteger)
     ((anInteger isStrictlyPositive) ifTrue:ifFalse: 
        {(LargePositiveInteger withMagnitude:  (magnitude sdiv: anInteger))}
@@ -509,7 +500,12 @@
              sdiv: (anInteger negated))
             negated)}))
 
-  ;;;; private methods ;;;;
+  (method smod: (aSmallInteger)
+    ((magnitude isZero) ifTrue:ifFalse:
+      {0}
+      {((aSmallInteger isStrictlyPositive) ifTrue:ifFalse: 
+        {(magnitude smod: aSmallInteger)}
+        {((magnitude smod: (aSmallInteger negated)) + aSmallInteger)})}))
 
   ; Answer the sum of the argument and the receiver.
   (method addSmallIntegerTo: (aSmallInteger) (self + (aSmallInteger asLargeInteger)))
@@ -556,10 +552,15 @@
   (method negated ()
     (LargePositiveInteger withMagnitude: magnitude))
 
+  ;;;; private methods ;;;;
+
   (method sdiv: (anInteger)
     ((self negated) sdiv: (anInteger negated)))
 
-  ;;;; private methods ;;;;
+  (method smod: (aSmallInteger)
+    ((aSmallInteger isStrictlyPositive) ifTrue:ifFalse: 
+        {(((self negated) smod: (aSmallInteger negated)) + aSmallInteger)}
+        {((magnitude smod: (aSmallInteger negated)) - aSmallInteger)}))
 
   ; Answer the sum of the argument and the receiver.
   (method addSmallIntegerTo: (aSmallInteger) (self + (aSmallInteger asLargeInteger)))
