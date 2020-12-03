@@ -7,20 +7,15 @@ Partner: Andrew Crofts
 The names of the people with whom you collaborated:
 TAs:
 	Andrew Cervantes
-	Yang
+	Yang Lowe
 	Matt Ahrens
+	Mohammed Emun
 
 
 ;; ASK ABOUT
 
-;; LISTS VS. ARRAY????
-;; check-expect failed: expected
-;;  ((Natural fromSmall: 0) decimal) to be similar to ( 0 )
-;;  (from evaluating <Array>), but it's List( 0 )
-
 ;; ASK ABOUT FAILING TESTS FOR HUGE NUMBERS - CPU TIME EXHAUSTED
-
-;; ASK ABOUT PRINT FOR LARGE INTS
+check-print failed: calling print method on ((LargeInteger fromSmall: -12234) * (LargeInteger fromSmall: 325)) caused error Run-time error: CPU time exhausted
   
 
 
