@@ -141,8 +141,6 @@
     ; If they are equal, evaluate eqBlock.
     ; If self is greater, evaluate gtBlock.
     (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
-      (self println)
-      (aNatural println)
       ((self < aNatural) ifTrue:ifFalse:
         ltBlock
         {((self = aNatural) ifTrue:ifFalse:
@@ -330,7 +328,7 @@
             {(set Q (Natural fromSmall: q0))}
             {(set Q ((Q' timesBase) + (Natural fromSmall: q0)))})
          
-          (aBlock value:value: Q r)}))
+          (aBlock value:value: Q r)})) ;; CHANGE n back to r
 
 
     (method decimal () (self decimal-helper: (List new)))
@@ -475,10 +473,10 @@
   ; Answer a small integer which is the remainder
   ; when the receiver is divided by the argument.
   (method smod: (aSmallInteger)
-    ((aSmallInteger isStrictlyPositive) ifTrue:ifFalse:
-      {(magnitude - (aSmallInteger * (magnitude sdiv: aSmallInteger)))}
-      {((magnitude - (aSmallInteger * (magnitude sdiv: aSmallInteger))) negated)}))
-
+    ((aSmallInteger isStrictlyPositive) ifTrue:ifFalse: 
+        {(magnitude smod: aSmallInteger)}
+        {((magnitude smod: (aSmallInteger negated)) negated)}))
+    
   (method isNegative         () (self subclassResponsibility))
   (method isNonnegative      () (self subclassResponsibility))
   (method isStrictlyPositive () (self subclassResponsibility))

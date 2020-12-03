@@ -117,6 +117,24 @@
 (check-print ((Natural fromSmall: 12) * (Natural fromSmall: 12)) 144)
 (check-print ((Natural fromSmall: 122) * (Natural fromSmall: 227)) 27694)
 
+;; tests for -
+(check-expect ((Natural fromSmall: 0) - (Natural fromSmall: 0)) (Natural fromSmall: 0))
+(check-expect ((Natural fromSmall: 1) - (Natural fromSmall: 0)) (Natural fromSmall: 1))
+(check-expect ((Natural fromSmall: 2) - (Natural fromSmall: 0)) (Natural fromSmall: 2))
+(check-expect ((Natural fromSmall: 2) - (Natural fromSmall: 1)) (Natural fromSmall: 1))
+(check-expect ((Natural fromSmall: 3) - (Natural fromSmall: 0)) (Natural fromSmall: 3))
+(check-expect ((Natural fromSmall: 3) - (Natural fromSmall: 1)) (Natural fromSmall: 2))
+(check-expect ((Natural fromSmall: 20) - (Natural fromSmall: 0)) (Natural fromSmall: 20))
+(check-expect ((Natural fromSmall: 20) - (Natural fromSmall: 10)) (Natural fromSmall: 10))
+(check-expect ((Natural fromSmall: 20) - (Natural fromSmall: 15)) (Natural fromSmall: 5))
+(check-expect ((Natural fromSmall: 20) - (Natural fromSmall: 19)) (Natural fromSmall: 1))
+(check-expect ((Natural fromSmall: 200) - (Natural fromSmall: 134)) (Natural fromSmall: 66))
+(check-expect ((Natural fromSmall: 200) - (Natural fromSmall: 5)) (Natural fromSmall: 195))
+(check-expect ((Natural fromSmall: 200000) - (Natural fromSmall: 0)) (Natural fromSmall: 200000))
+(check-expect ((Natural fromSmall: 20000000) - (Natural fromSmall: 321410)) (Natural fromSmall: 19678590))
+(check-expect ((Natural fromSmall: 123456789) - (Natural fromSmall: 12345678)) (Natural fromSmall: 111111111))
+(check-expect ((Natural fromSmall: 123456789) - (Natural fromSmall: 123456)) (Natural fromSmall: 123333333))
+
 ;; tests for sdiv:
 (check-print ((Natural fromSmall: 0) sdiv: 1) 0)
 (check-print ((Natural fromSmall: 0) sdiv: 194) 0)
