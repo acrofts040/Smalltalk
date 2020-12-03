@@ -9,7 +9,9 @@
 (use bignum.smt)
 
 ;;;;;;;;;; TESTING FOR CLASS LARGE INTEGER ;;;;;;;;;;
-
+(check-print (LargeInteger fromSmall: 0) 0)
+(check-print (LargeInteger fromSmall: 1) 1)
+(check-print (LargeInteger fromSmall: 10) 10)
 (check-print (LargeInteger fromSmall: 35746) 35746)
 (check-print (LargeInteger fromSmall: 2147483646) 2147483646)
 

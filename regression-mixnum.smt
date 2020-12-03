@@ -10,49 +10,23 @@
 
 ;;;;;;;;;; TESTING FOR MIXNUM ;;;;;;;;;;
 
+; (check-assert ((LargeInteger fromSmall: 22) = ((SmallInteger new: 22) asLargeInteger)))
 
+(check-print (SmallInteger new: 0) 0)
+(check-print (SmallInteger new: 1) 1)
+(check-print (SmallInteger new: 10) 10)
+(check-print (SmallInteger new: 16) 16)
+(check-print (SmallInteger new: 26) 26)
+(check-print (SmallInteger new: 100) 100)
 
-(class Factorial
-  [subclass-of Object]
-  (class-method printUpto: (limit) [locals n nfac]
-    (set n 1)
-    (set nfac 1)
-      ({(n <= limit)} whileTrue:
-        {(n print) ('! print) (space print) ('= print)
-                              (space print) (nfac println)
-    (set n (n + 1))
-    (set nfac (n * nfac))}))
-)
+(check-print ((SmallInteger new: 0) asLargeInteger) 0)
+(check-print ((SmallInteger new: 0) asLargeInteger) 0)
+(check-print ((SmallInteger new: 1) asLargeInteger) 1)
+(check-print ((SmallInteger new: 9) asLargeInteger) 9)
+; (check-print ((SmallInteger new: 10) asLargeInteger) 10)
+; (check-print ((SmallInteger new: 15) asLargeInteger) 15)
+; (check-print ((SmallInteger new: 16) asLargeInteger) 16)
 
-(Factorial printUpto: 20)
-
-
-
-; Summary: 20 factorial
-(define factorial (n)
-  ((n isStrictlyPositive) ifTrue:ifFalse: 
-     {(n * (factorial value: (n - 1)))}
-     {1}))
-
-;;; (check-print (factorial value: 20) 2432902008176640000)
-
-; Summary: 10 to the tenth power, linear time, mixed arithmetic
-(class Test10Power
-  [subclass-of Object]
-  (class-method run: (power)
-     [locals n 10-to-the-n]
-     (set n 0)
-     (set 10-to-the-n 1)
-     ({(n < power)} whileTrue:
-         {(set n (n + 1))
-          (set 10-to-the-n (10 * 10-to-the-n))})
-     10-to-the-n)
-)
-;;; (check-print (Test10Power run: 10) 10000000000)
-
-; Summary: 10 to the 30th power, mixed arithmetic
-;;; (check-print (Test10Power run: 30) 
-;;;              1000000000000000000000000000000)
 
 
 
