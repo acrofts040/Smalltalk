@@ -12,10 +12,9 @@ TAs:
 	Mohammed Emun
 
 
-;; ASK ABOUT
+;; ASK ABOUT errors for div by 0, mod by 0, subtract 0 - (natural)
 
-;; ASK ABOUT FAILING TESTS FOR HUGE NUMBERS - CPU TIME EXHAUSTED
-check-print failed: calling print method on ((LargeInteger fromSmall: -12234) * (LargeInteger fromSmall: 325)) caused error Run-time error: CPU time exhausted
+;; ASK ABOUT smod: for Large Ints
   
 
 
