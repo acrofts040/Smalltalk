@@ -9,7 +9,7 @@
 (use bignum.smt)
 
 (SmallInteger addSelector:withMethod: 'asLargeInteger
-  (compiled-method () (LargeInteger new: self)))
+  (compiled-method () (LargeInteger fromSmall: self)))
 
 (SmallInteger addSelector:withMethod: '+
   (compiled-method (aNumber) (aNumber addSmallIntegerTo: self)))
@@ -28,12 +28,10 @@
 (SmallInteger addSelector:withMethod: '-
   (compiled-method (aNumber) ((aNumber negated) addSmallIntegerTo: self)))
 
-
 (SmallInteger addSelector:withMethod: 'negated
   (compiled-method ()
     ((primitive subWithOverflow self 0
         {(0 - (self asLargeInteger))}) value)))
-
 
 (SmallInteger addSelector:withMethod: 'addLargePositiveIntegerTo:
   (compiled-method (aLargePositiveInteger) (aLargePositiveInteger addSmallIntegerTo: self)))
@@ -47,14 +45,20 @@
 (SmallInteger addSelector:withMethod: 'multiplyByLargeNegativeInteger:
   (compiled-method (aLargeNegativeInteger) (aLargeNegativeInteger multiplyBySmallInteger: self)))
 
-(SmallInteger addSelector:withMethod: '<
-  (compiled-method (anInteger) (self leftAsExercise)))
+; (SmallInteger addSelector:withMethod: '<
+;   (compiled-method (anInteger) (anInteger smallIntegerGreaterThan: self)))
 
-(SmallInteger addSelector:withMethod: '>
-  (compiled-method (anInteger) (anInteger < self)))
+; (SmallInteger addSelector:withMethod: 'lessThanLargeInt:
+;   (compiled-method (aLargeInteger) (aLargeInteger smallIntegerGreaterThan: self)))
 
-(SmallInteger addSelector:withMethod: '=
-  (compiled-method (anInteger) (anInteger = self)))
+; (SmallInteger addSelector:withMethod: 'smallIntegerGreaterThan:
+;   (compiled-method (aSmallInteger) (primitive > aSmallInteger self)))
+
+; (SmallInteger addSelector:withMethod: '>
+;   (compiled-method (anInteger) (anInteger < self)))
+
+; (SmallInteger addSelector:withMethod: '=
+;   (compiled-method (anInteger) (self leftAsExercise)))
 
 ; (SmallInteger addSelector:withMethod: 'isZero
 ;   (compiled-method () (self leftAsExercise)))
