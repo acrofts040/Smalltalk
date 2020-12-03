@@ -179,6 +179,8 @@
     ; private decimal helper
     (method decimal-helper: (aList) aList)
 
+    (method isZero () true)
+
     ; private method
     ; analogous to decimal but uses the base of Natural
     (method base-rep () ((List new) addFirst: 0))
@@ -186,9 +188,15 @@
     ; private base-rep-helper
     (method base-rep-helper: (aList) aList)
 
-    (method isZero () true)
-
     ;;;; private instance methods ;;;;
+
+    ; Answers a small integer whose value is the
+    ; receiver modulo the base of Natural numbers.
+    (method modBase () 0)
+
+    ; Answers a Natural whose value is the
+    ; receiver divided by the base of Natural numbers.
+    (method divBase () 0)
 
     ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
     (method plus:carry: (aNatural c)
