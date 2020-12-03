@@ -397,3 +397,22 @@ nr@test=)
 
 ; We computed Natural 582490164110 div 10 = 58249016411 
 ;;;(check-print (((Natural fromSmall: 110) + ((Natural fromSmall: 1000) * ((Natural fromSmall: 164) + ((Natural fromSmall: 1000) * ((Natural fromSmall: 490) + ((Natural fromSmall: 1000) * ((Natural fromSmall: 582) + ((Natural fromSmall: 1000) * (Natural fromSmall: 0))))))))) sdiv: 10) 58249016411)
+
+
+
+(check-expect ((Natural fromSmall: 0) - (Natural fromSmall: 0)) (Natural fromSmall: 0)) ; 0 - 0
+(check-expect ((Natural fromSmall: 1) - (Natural fromSmall: 0)) (Natural fromSmall: 1)) ; 1 - 0
+(check-expect ((Natural fromSmall: 2) - (Natural fromSmall: 0)) (Natural fromSmall: 2)) ; 2 - 0
+(check-expect ((Natural fromSmall: 2) - (Natural fromSmall: 1)) (Natural fromSmall: 1)) ; 2 - 1
+(check-expect ((Natural fromSmall: 3) - (Natural fromSmall: 0)) (Natural fromSmall: 3)) ; 3 - 0
+(check-expect ((Natural fromSmall: 3) - (Natural fromSmall: 1)) (Natural fromSmall: 2)) ; 3 - 1
+(check-expect ((Natural fromSmall: 20) - (Natural fromSmall: 0)) (Natural fromSmall: 20)) ; 20 - 0
+(check-expect ((Natural fromSmall: 20) - (Natural fromSmall: 10)) (Natural fromSmall: 10)) ; 2 - 1
+(check-expect ((Natural fromSmall: 20) - (Natural fromSmall: 15)) (Natural fromSmall: 5)) ; 20 - 15
+(check-expect ((Natural fromSmall: 20) - (Natural fromSmall: 19)) (Natural fromSmall: 1)) ; 2 - 1
+(check-expect ((Natural fromSmall: 200) - (Natural fromSmall: 134)) (Natural fromSmall: 66)) ; 200 - 134
+(check-expect ((Natural fromSmall: 200) - (Natural fromSmall: 5)) (Natural fromSmall: 195)) ; 200 - 5
+(check-expect ((Natural fromSmall: 200000) - (Natural fromSmall: 0)) (Natural fromSmall: 200000)) ; 
+(check-expect ((Natural fromSmall: 20000000) - (Natural fromSmall: 321410)) (Natural fromSmall: 19678590)) ; 
+(check-expect ((Natural fromSmall: 123456789) - (Natural fromSmall: 12345678)) (Natural fromSmall: 111111111))
+(check-expect ((Natural fromSmall: 123456789) - (Natural fromSmall: 123456)) (Natural fromSmall: 123333333))
