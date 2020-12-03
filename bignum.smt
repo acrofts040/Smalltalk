@@ -141,11 +141,13 @@
     ; If they are equal, evaluate eqBlock.
     ; If self is greater, evaluate gtBlock.
     (method compare:withLt:withEq:withGt: (aNatural ltBlock eqBlock gtBlock)
+      (self println)
+      (aNatural println)
       ((self < aNatural) ifTrue:ifFalse:
-        {ltBlock}
+        ltBlock
         {((self = aNatural) ifTrue:ifFalse:
-          {eqBlock}
-          {gtBlock})}))
+          eqBlock
+          gtBlock)}))
 
     ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
     (method plus:carry: (aNatural c) (self subclassResponsibility))
@@ -425,6 +427,14 @@
         {(((self fromSmall: 1) + (self fromSmall: ((anInteger + 1) negated)))
           negated)}
         {((LargePositiveInteger new) magnitude: (Natural fromSmall: anInteger))}))
+
+  ;; given in large-int.smt starter code
+  ; (class-method fromSmall: (anInteger)
+  ;    ((anInteger isNegative) ifTrue:ifFalse:
+  ;       {(((self fromSmall: 1) + (self fromSmall: ((anInteger + 1) negated)))
+  ;         negated)}
+  ;       {((LargePositiveInteger new) magnitude: (Natural new: anInteger))}))
+
   
   (method asLargeInteger () self)
   (method isZero () (magnitude isZero))
@@ -464,7 +474,10 @@
 
   ; Answer a small integer which is the remainder
   ; when the receiver is divided by the argument.
-  (method smod: (aSmallInteger) (self leftAsExercise))
+  (method smod: (aSmallInteger)
+    ((aSmallInteger isStrictlyPositive) ifTrue:ifFalse:
+      {(magnitude - (aSmallInteger * (magnitude sdiv: aSmallInteger)))}
+      {((magnitude - (aSmallInteger * (magnitude sdiv: aSmallInteger))) negated)}))
 
   (method isNegative         () (self subclassResponsibility))
   (method isNonnegative      () (self subclassResponsibility))

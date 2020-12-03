@@ -4,6 +4,12 @@ Fall 2020
 Name: Ann Marie Burke (aburke04)
 Partner: Andrew Crofts
 
+A description of how you tested your bignum code
+
+;; TODO
+
+
+
 The names of the people with whom you collaborated:
 TAs:
 	Andrew Cervantes
@@ -12,13 +18,24 @@ TAs:
 	Mohammed Emun
 
 
-;; ASK ABOUT errors for div by 0, mod by 0, subtract 0 - (natural)
 
-;; ASK ABOUT smod: for Large Ints
+;; ASK ABOUT ;;
+
+Natural numbers (bignum.smt) - errors for div by 0, mod by 0
+smod: for Large Ints (bignum.smt)
+comparison for 39 (mixnum.smt) - make sure it's optional extra credit
+mixnum.smt - make sure we're doing addSelector:withMethod: correctly
+	esp for addLargePositiveIntegerTo,
+	 		addLargeNegativeIntegerTo,
+	 		multiplyByLargePositiveInteger,
+	 		multiplyByLargeNegativeInteger
+adt.txt questions
+
+;; END ;;
   
 
 
-A list identifying which problems you solved:
+The numbers of the exercises you worked:
     - 37
     - 38
     - 39
@@ -26,4 +43,4 @@ A list identifying which problems you solved:
     - ADT
 
 (no extra credit)
-
+Narrative and measurements to accompany your extra-credit answers, if any

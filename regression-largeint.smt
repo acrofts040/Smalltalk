@@ -203,6 +203,31 @@
 
 
 ;; tests for sdiv:
+(check-print ((LargeInteger fromSmall: 0) sdiv: 1) 0)
+(check-print ((LargeInteger fromSmall: 0) sdiv: 194) 0)
+
+(check-print ((LargeInteger fromSmall: 1) sdiv: 10) 0)
+(check-print ((LargeInteger fromSmall: 1) sdiv: 16) 0)
+(check-print ((LargeInteger fromSmall: 15) sdiv: 10) 1)
+(check-print ((LargeInteger fromSmall: 16) sdiv: 10) 1)
+(check-print ((LargeInteger fromSmall: 16) sdiv: 1) 16)
+(check-print ((LargeInteger fromSmall: 25) sdiv: 10) 2)
+
+(check-error ((LargeInteger fromSmall: 0) sdiv: 0))
+(check-error ((LargeInteger fromSmall: 16) sdiv: 0))
+
+;; test for smod:
+(check-expect ((LargeInteger fromSmall: 0) smod: 1) 0)
+(check-expect ((LargeInteger fromSmall: 0) smod: 186) 0)
+(check-expect ((LargeInteger fromSmall: 1) smod: 10) 1)
+(check-expect ((LargeInteger fromSmall: 1) smod: 16) 1)
+(check-expect ((LargeInteger fromSmall: 15) smod: 10) 5)
+(check-expect ((LargeInteger fromSmall: 16) smod: 10) 6)
+(check-expect ((LargeInteger fromSmall: 16) smod: 1) 0)
+(check-expect ((LargeInteger fromSmall: 25) smod: 10) 5)
+
+(check-error ((LargeInteger fromSmall: 0) smod: 0))
+(check-error ((LargeInteger fromSmall: 16) smod: 0))
 
 
 ;;;;;;;;;; END TESTING FOR CLASS LARGE INTEGER ;;;;;;;;;;

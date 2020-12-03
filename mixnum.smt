@@ -30,7 +30,7 @@
 
 (SmallInteger addSelector:withMethod: 'negated
   (compiled-method ()
-    ((primitive subWithOverflow self 0
+    ((primitive subWithOverflow 0 self
         {(0 - (self asLargeInteger))}) value)))
 
 (SmallInteger addSelector:withMethod: 'addLargePositiveIntegerTo:

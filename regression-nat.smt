@@ -117,7 +117,7 @@
 (check-print ((Natural fromSmall: 12) * (Natural fromSmall: 12)) 144)
 (check-print ((Natural fromSmall: 122) * (Natural fromSmall: 227)) 27694)
 
-;; check-print tests for sdiv:
+;; tests for sdiv:
 (check-print ((Natural fromSmall: 0) sdiv: 1) 0)
 (check-print ((Natural fromSmall: 0) sdiv: 194) 0)
 
