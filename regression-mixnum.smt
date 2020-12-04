@@ -53,6 +53,10 @@
 (check-assert ((SmallInteger new: 250) = (SmallInteger new: 250)))
 (check-assert ((SmallInteger new: 1001) = (SmallInteger new: 1001)))
 
+(check-assert (((SmallInteger new: 34) asLargeInteger) = (LargeInteger fromSmall: 34)))
+(check-assert (((SmallInteger new: 1001) asLargeInteger) = (LargeInteger fromSmall: 1001)))
+(check-assert (((SmallInteger new: 32768) asLargeInteger) = (LargeInteger fromSmall: 32768)))
+
 ;; tests for +
 (check-expect ((SmallInteger new: 0) + (SmallInteger new: 0)) 0)
 (check-expect ((SmallInteger new: 0) + (SmallInteger new: 1)) 1)
@@ -130,16 +134,14 @@
 
 ;; Factorial
 (class Factorial
-    [subclass-of Object]
-    (class-method printUpto: (limit) [locals n nfac]
-
-    (set n 1)
-    (set nfac 1)
-    ({(n <= limit)} whileTrue:
-        {(n print) ('! print) (space print) ('= print)
-                              (space print) (nfac println)
-    (set n (n + 1))
-    (set nfac (n * nfac))})))
+  [subclass-of Object]
+  (class-method printUpto: (limit) [locals n nfac]
+     (set n 1)
+     (set nfac 1)
+     ({(n <= limit)} whileTrue: 
+        {(n print) ('! print) (space print) ('= print) (space print) (nfac println)
+         (set n (n + 1))
+         (set nfac (n * nfac))})))
 
 
 (Factorial printUpto: 20)

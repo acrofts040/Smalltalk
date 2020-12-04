@@ -39,19 +39,24 @@
 
 ; Summary: .........
 (check-print
-    (((LargeInteger fromSmall: 32767) sdiv: 10) 3276)
+    (((LargeInteger fromSmall: 32767) sdiv: 10) smod: -5) -4)
 
 ; Summary: .........
-
-
-; Summary: .........
-
-
+(check-print
+    (((((LargeInteger fromSmall: -2147483647) * (LargeInteger fromSmall: -1))
+        + (LargeInteger fromSmall: -15869))
+            + ((LargeInteger fromSmall: 157) negated))
+                * (LargeInteger fromSmall: 400))
+    858987048400)
 
 ;; 3 tests for mixed arithmetic involving both small and large integers
 
-; Summary: .........
 
+; Summary: .........
+(check-print ((SmallInteger new: 4) + (LargeInteger fromSmall: 32748)) 32752)
+
+; Summary: .........
+(check-print ((LargeInteger fromSmall: 32748) + (SmallInteger new: 4)) 32752)
 
 ; Summary: .........
 
