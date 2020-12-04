@@ -5,9 +5,7 @@ Name: Ann Marie Burke (aburke04)
 Partner: Andrew Crofts
 
 A description of how you tested your bignum code
-
 ;; TODO
-
 
 
 The names of the people with whom you collaborated:
@@ -16,24 +14,7 @@ TAs:
 	Yang Lowe
 	Matt Ahrens
 	Mohammed Emun
-
-
-
-;; ASK ABOUT ;;
-
-Natural numbers (bignum.smt) - errors for div by 0, mod by 0
-smod: for Large Ints (bignum.smt)
-comparison for 39 (mixnum.smt) - make sure it's optional extra credit
-mixnum.smt - make sure we're doing addSelector:withMethod: correctly
-	especially for
-  		addLargePositiveIntegerTo,
- 		addLargeNegativeIntegerTo,
- 		multiplyByLargePositiveInteger,
- 		multiplyByLargeNegativeInteger
-adt.txt questions
-
-;; END ;;
-  
+    Timothy Sanford
 
 
 The numbers of the exercises you worked:
