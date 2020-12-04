@@ -1,75 +1,11 @@
-(class Magnitude
-    [subclass-of Object] ; abstract class
-    (method =  (x) (self subclassResponsibility)) ; may not inherit
-    (method <  (x) (self subclassResponsibility))
-    (method >  (y) (y < self))
-    (method <= (x) ((self > x) not))
-    (method >= (x) ((self < x) not))
-    (method min: (aMagnitude)
-       ((self < aMagnitude) ifTrue:ifFalse: {self} {aMagnitude}))
-    (method max: (aMagnitude)
-       ((self > aMagnitude) ifTrue:ifFalse: {self} {aMagnitude}))
-)
-(class Number
-    [subclass-of Magnitude]  ; abstract class
-    ;;;;;;; arithmetic
-    (method +   (aNumber)     (self subclassResponsibility))
-    (method *   (aNumber)     (self subclassResponsibility))
-    (method negated    ()     (self subclassResponsibility))
-    (method reciprocal ()     (self subclassResponsibility))
-    
-    ;;;;;;; coercion
-    (method asInteger  ()     (self subclassResponsibility))
-    (method asFraction ()     (self subclassResponsibility))
-    (method asFloat    ()     (self subclassResponsibility))
-    (method coerce: (aNumber) (self subclassResponsibility))
-    (method -  (y) (self + (y  negated)))
-    (method abs () ((self isNegative) ifTrue:ifFalse: {(self negated)} {self}))
-    (method /  (y) (self * (y reciprocal)))
+;;;;;;;;;;;;;;;;;;; COMP 105 SMALL ASSIGNMENT ;;;;;;;;;;;;;;;
+;; bignum.smt
+;; COMP 105 - hw9 small
+;; Fall 2020
 
-    (method isNegative         () (self  < (self coerce: 0)))
-    (method isNonnegative      () (self >= (self coerce: 0)))
-    (method isStrictlyPositive () (self  > (self coerce: 0)))
-    (method squared () (self * self))
-    (method raisedToInteger: (anInteger)
-        ((anInteger = 0) ifTrue:ifFalse:
-            {(self coerce: 1)}
-            {((anInteger = 1) ifTrue:ifFalse: {self}
-                {(((self raisedToInteger: (anInteger div: 2)) squared) *
-                    (self raisedToInteger: (anInteger mod: 2)))})}))
-    (method sqrt () (self sqrtWithin: (self coerce: (1 / 100))))
-    (method sqrtWithin: (epsilon) [locals two x<i-1> x<i>]
-        ; find square root of receiver within epsilon
-        (set two    (self coerce: 2))
-        (set x<i-1> (self coerce: 1))
-        (set x<i>   ((x<i-1> + (self / x<i-1>)) / two))
-        ({(((x<i-1> - x<i>) abs) > epsilon)} whileTrue:
-               {(set x<i-1> x<i>)
-                (set x<i> ((x<i-1> + (self / x<i-1>)) / two))})
-        x<i>)
-)
-(class Integer
-    [subclass-of Number] ; abstract class
-    (method div: (n) (self subclassResponsibility))
-    (method mod: (n) (self - (n * (self div: n))))
-    (method gcd: (n) ((n = (self coerce: 0))
-                      ifTrue:ifFalse: {self} {(n gcd: (self mod: n))}))
-    (method lcm: (n) (self * (n div: (self gcd: n))))
-    (method reciprocal () (Fraction num:den: 1 self)) 
-    (method / (aNumber) ((self asFraction) / aNumber))
-    (method asFraction () (Fraction num:den:  self 1))
-    (method asFloat    () (Float    mant:exp: self 0))
-    (method asInteger () self)
-    (method coerce: (aNumber) (aNumber asInteger))
+;; Name: Ann Marie Burke (aburke04)
+;; Partner: Andrew Crofts
 
-
-    (method timesRepeat: (aBlock) [locals count]
-        ((self isNegative) ifTrue: {(self error: 'negative-repeat-count)})
-        (set count self)
-        ({(count != 0)} whileTrue:
-             {(aBlock value)
-              (set count (count - 1))}))
-)
 ; starter code copied from COMP 105 spec
 (class Natural
     [subclass-of Magnitude]
@@ -85,7 +21,7 @@
     ;;;; private class methods ;;;;
 
     ;; Answers b, the base of Natural numbers
-    (class-method base () 32768) ; 2^15 = 32768 ; 2^16 = 65536
+    (class-method base () 32768) ; 2^15 = 32768
 
     ;;;; end private class methods ;;;;
 

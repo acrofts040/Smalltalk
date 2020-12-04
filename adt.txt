@@ -7,9 +7,6 @@
 ;; Partner: Andrew Crofts
 
 
-
-NOTES: abstraction function and invariant
-
 For each concrete class you 
 		defined to represent natural numbers in exercise 37
 		
@@ -34,7 +31,6 @@ NatNonzero:
 	Invariants: a NatNonzero object will never be less than or equal 
 				to zero in size.
 
-
 	instance variables: 
 		d: integer representing the last digit of the natural number. 
 			In practice, d is the mod of the natural number when it is 
@@ -52,7 +48,6 @@ functions were short and economical, allowing for a smooth process. The
 debugging phase went well as we were often able to extremely easily 
 identify issues through the tracing functionality. Overall, we have 
 no regrets. 
-
 
 
 Exercise 38:
@@ -82,6 +77,4 @@ Exercise 38:
 		Invariants: a LargePositiveInteger object will never have a 
 					positive sign
 		ivars: n/a
-
-
 

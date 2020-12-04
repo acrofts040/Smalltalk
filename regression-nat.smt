@@ -98,6 +98,8 @@
 (check-print ((Natural fromSmall: 143) + (Natural fromSmall: 1)) 144)
 (check-print ((Natural fromSmall: 1)   + (Natural fromSmall: 1023)) 1024)
 (check-print ((Natural fromSmall: 1023) + (Natural fromSmall: 1)) 1024)
+(check-print ((Natural fromSmall: 32767) + (Natural fromSmall: 1)) 32768)
+(check-print ((Natural fromSmall: 32768) + (Natural fromSmall: 1)) 32769)
 
 ;; check-print tests for multiplying nat * 0
 (check-print ((Natural fromSmall: 0)  * (Natural fromSmall: 0)) 0)

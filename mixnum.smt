@@ -46,28 +46,5 @@
   (compiled-method (aLargeNegativeInteger) 
                     (aLargeNegativeInteger multiplyBySmallInteger: self)))
 
-; (SmallInteger addSelector:withMethod: '<
-;   (compiled-method (anInteger) 
-;              (anInteger smallIntegerGreaterThan: self)))
-
-; (SmallInteger addSelector:withMethod: 'lessThanLargeInt:
-;   (compiled-method (aLargeInteger) 
-;                      (aLargeInteger smallIntegerGreaterThan: self)))
-
-; (SmallInteger addSelector:withMethod: 'smallIntegerGreaterThan:
-;   (compiled-method (aSmallInteger) 
-;                      (primitive > aSmallInteger self)))
-
-; (SmallInteger addSelector:withMethod: '>
-;   (compiled-method (anInteger) (anInteger < self)))
-
-; (SmallInteger addSelector:withMethod: '=
-;   (compiled-method (anInteger) (self leftAsExercise)))
-
-; (SmallInteger addSelector:withMethod: 'isZero
-;   (compiled-method () (self leftAsExercise)))
-
-
-
 
 

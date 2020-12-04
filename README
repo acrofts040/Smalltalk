@@ -5,7 +5,45 @@ Name: Ann Marie Burke (aburke04)
 Partner: Andrew Crofts
 
 A description of how you tested your bignum code
-;; TODO
+
+We put all of our tests into a separate file, and wrote unit tests for all of
+the methods we wrote and methods that relied on methods we wrote.
+
+For Natural:
+
+    We started with unit tests on class Natural for =, <, >, <=, >=.
+    For each of these, we tested arithmetic with 0 and nonzero naturals.
+    We tested with small naturals (like 1, 2, 10, etc.)
+    and big naturals (100, 1000, etc.)
+    We tested numbers on the edge of our base. So for example, since our base is
+    2 ^ 15, we tested with 2 ^ 15 - 1 and 2 ^ 15.
+
+    We then tested +, *, and -.
+    For + and *, we tested it with 0 and nonzero naturals.
+    Again, we tested small and big naturals, and numbers on edge of our base.
+
+    We also tested sdiv:, smod:, and decimal on a variety of big and small nats
+
+
+For Large Integer:
+
+    We started with testing fromSmall: to make sure we could create large ints.
+    Then we tested =, <, >, <=, >= on a variety of big and small large ints.
+    Then we tested negated, isNegative, isNonnegative, and isStrictlyPositive
+    to make sure those returned the correct boolean.
+    Then we tested addition (+) with positive + positive, positive + negative,
+    negative + positive, and negative + negative.
+    We also tested multiplication (*) with those four positive/negative combos.
+    Lastly, we tested sdiv: and smod: on those four combinations.
+
+
+After we implemented everything, we tested everything together.
+
+It was definitely helpful to unit test so we could pinpoint where our code
+was not working more easily than if we did not unit test.
+It also helped us catch errors in our implementations when the answer we
+expected wasn't the answer we got.
+
 
 
 The names of the people with whom you collaborated:
@@ -15,7 +53,7 @@ TAs:
 	Matt Ahrens
 	Mohammed Emun
     Timothy Sanford
-
+    Sos Oganessian
 
 The numbers of the exercises you worked:
     - 37
@@ -25,4 +63,6 @@ The numbers of the exercises you worked:
     - ADT
 
 (no extra credit)
-Narrative and measurements to accompany your extra-credit answers, if any
+
+
+
