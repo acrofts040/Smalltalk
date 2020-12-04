@@ -10,7 +10,9 @@
 
 NOTES: abstraction function and invariant
 
-For each concrete class you defined to represent natural numbers in exercise 37
+For each concrete class you 
+		defined to represent natural numbers in exercise 37
+		
     - List the instance variables.
     - Copy and paste the class’s abstraction function and invariant.
 
@@ -20,53 +22,56 @@ NatZero:
 
 	Abstraction Function: A (self) = 0
 
-	Invariants: natzero will always have an m of 0 and a d of 0, natzero will never
-				signify any size nat other than 0
+	Invariants: natzero will always have an m of 0 and a d of 0, natzero will
+	 			never signify any size nat other than 0
 
-	ivars: n/a (any need for instance variables was avoided through dyammic dispatch)
+	ivars: n/a (any need for instance variables was avoided through 
+					dynamic dispatch)
 
 NatNonzero: 
 	Abstraction Function: A(self) = (m * base) + d
 
-	Invariants: a NatNonzero object will never be less than or equal to zero in size.
+	Invariants: a NatNonzero object will never be less than or equal 
+				to zero in size.
 
 
 	instance variables: 
-		b: an integer representing the base of the number system to be used. 
-			Will be used to mod and divide values to obtain different digits
-			of the number. 
-		d: integer representing the last digit of the natural number. In practice,
-			d is the mod of the natural number when it is modded by base.
-		m: a natural number representing the rest of the digits other than the smallest
-			 of the number (d) . In practice, it is the natural number divided by the base. 
+		d: integer representing the last digit of the natural number. 
+			In practice, d is the mod of the natural number when it is 
+			  modded by base.
+		m: a natural number representing the rest of the digits other 
+			than the smallest of the number (d) . In practice, it is 
+			 the natural number divided by the base. 
 
 
-We ended up using the subclass representation for its ease in implementation and,
-	vitally, in debugging. With the sublass rep. there were no issues trying 
-	to reconcile a data structure such as a list with the very different rep.
-	of natural. Since dynamic dispact naturally avoids case analysis, functions
-	were short and economical, allowing for a smooth process. The debugging phase 
-	went well as we were often able to extremely easily identify issues through 
-	the tracing functionality. Overall, we have no regrets. 
+	We used the subclass representation for its ease in implementation 
+and, vitally, in debugging. With the sublass rep. there were no issues trying
+to reconcile a data structure such as a list with the very different rep.
+of natural. Since dynamic dispact naturally avoids case analysis, 
+functions were short and economical, allowing for a smooth process. The 
+debugging phase went well as we were often able to extremely easily 
+identify issues through the tracing functionality. Overall, we have 
+no regrets. 
 
 
 
 Exercise 38:
 
 	LargeInteger: 
-		Invariants: the object will never have any value in which the magnitude mod 1 is
-					!= 0. 
+		Invariants: the object will never have any value in which the 
+					magnitude mod 1 is != 0. 
 
-		instance variables: 
-			magnitude: a magnitude object that represents the numerical size of the 
-						integer (distance from zero) (regardless of sign). 
+		instance variables: magnitude:a magnitude object that represents the numerical
+					 size of the integer (distance from zero) 
+						  (regardless of sign). 
 
 
 	LargePositiveInteger: (where m represents magnitude)
 
 		Abstraction Function: A (self) = m
 
-		Invariants: a LargePositiveInteger object will never have a negative sign
+		Invariants: a LargePositiveInteger object will never have a
+					negative sign
 
 		ivars: n/a
 
@@ -74,7 +79,8 @@ Exercise 38:
 
 		Abstraction Function: A (self) = -1 * m
 
-		Invariants: a LargePositiveInteger object will never have a positive sign
+		Invariants: a LargePositiveInteger object will never have a 
+					positive sign
 		ivars: n/a
 
 
