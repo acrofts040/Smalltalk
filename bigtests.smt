@@ -6,9 +6,40 @@
 ;; Name: Ann Marie Burke (aburke04)
 ;; Partner: Andrew Crofts
 
-;; 3 tests will test only class Natural.
-;; 3 tests will test the large-integer classes, which are built on top of class Natural.
-;; 3 tests will test mixed arithmetic involving both small and large integers.
+(use mixnum.smt)
+
+;; 3 tests for class Natural ;;
+
+; Summary: Tests the +, -, and * operations
+(check-print
+    (((Natural fromSmall: 53857) + (Natural fromSmall: 1023))
+        * ((Natural fromSmall: 32770) - (Natural fromSmall: 2)))
+    1798307840)
+
+; Summary: Tests the *, -, sdiv:, and smod: operations
+(check-print
+    (((((Natural fromSmall: 2049) * (Natural fromSmall: 1025))
+        - (Natural fromSmall: 1587))
+            sdiv: 149) smod: 16) 4)
+
+; Summary: Tests *, -, sdiv:, and smod:, specifically 0 mod x
+(check-print
+    ((((((Natural fromSmall: 42895) * (Natural fromSmall: 1))
+        - (Natural fromSmall: 2495))
+            sdiv: 40400) - (Natural fromSmall: 1)) smod: 10) 0)
+
+;; 3 tests for class LargeInteger
+
+; Summary: Tests *, -, +, smod:, specifically mod with negative
+
+(check-print
+    (((((LargeInteger fromSmall: 2436175) * (LargeInteger fromSmall: -100))
+        - (LargeInteger fromSmall: 243617500))
+            + (LargeInteger fromSmall: -4095)) smod: 7) 0)
+
+; Summary: .........
+(check-print
+    (((LargeInteger fromSmall: 32767) sdiv: 10) 3276)
 
 ; Summary: .........
 
@@ -16,20 +47,8 @@
 ; Summary: .........
 
 
-; Summary: .........
 
-
-; Summary: .........
-
-
-; Summary: .........
-
-
-; Summary: .........
-
-
-; Summary: .........
-
+;; 3 tests for mixed arithmetic involving both small and large integers
 
 ; Summary: .........
 

@@ -8,9 +8,6 @@
 
 (use bignum.smt)
 
-(SmallInteger addSelector:withMethod: 'asLargeInteger
-  (compiled-method () (LargeInteger fromSmall: self)))
-
 (SmallInteger addSelector:withMethod: '+
   (compiled-method (aNumber) (aNumber addSmallIntegerTo: self)))
 (SmallInteger addSelector:withMethod: 'addSmallIntegerTo:
@@ -19,8 +16,8 @@
         {((self asLargeInteger) + anInteger)}) value)))
 
 (SmallInteger addSelector:withMethod: '*
-  (compiled-method (aNumber) (aNumber mulSmallIntegerTo: self)))
-(SmallInteger addSelector:withMethod: 'mulSmallIntegerTo:
+  (compiled-method (aNumber) (aNumber multiplyBySmallInteger: self)))
+(SmallInteger addSelector:withMethod: 'multiplyBySmallInteger:
   (compiled-method (anInteger)
     ((primitive mulWithOverflow self anInteger
         {((self asLargeInteger) * anInteger)}) value)))

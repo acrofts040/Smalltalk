@@ -10,6 +10,9 @@
 
 ;;;;;;;;;; TESTING FOR CLASS NATURAL ;;;;;;;;;;
 
+;; base 2^15 does not overflow
+; (((Natural base) + 1) * ((Natural base) - 1))
+
 ;; check-assert tests for =
 (check-assert ((Natural fromSmall: 0) = (Natural fromSmall: 0)))
 (check-assert ((Natural fromSmall: 1) = (Natural fromSmall: 1)))

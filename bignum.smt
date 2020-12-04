@@ -85,7 +85,7 @@
     ;;;; private class methods ;;;;
 
     ;; Answers b, the base of Natural numbers
-    (class-method base () 16)
+    (class-method base () 32768) ; 2^15 = 32768 ; 2^16 = 65536
 
     ;;;; end private class methods ;;;;
 
@@ -253,7 +253,7 @@
     [subclass-of Natural]
 
     ; instance variables
-    [ivars b d m]
+    [ivars d m]
 
     ;;;; private class methods ;;;;
 
@@ -501,11 +501,17 @@
             negated)}))
 
   (method smod: (aSmallInteger)
-    ((magnitude isZero) ifTrue:ifFalse:
-      {0}
-      {((aSmallInteger isStrictlyPositive) ifTrue:ifFalse: 
-        {(magnitude smod: aSmallInteger)}
-        {((magnitude smod: (aSmallInteger negated)) + aSmallInteger)})}))
+    [locals r]
+    ((aSmallInteger = 0) ifTrue:ifFalse:
+      {(self error: 'Cannot-perform-division-or-mod-by-0)}
+      {((magnitude isZero) ifTrue:ifFalse:
+        {0}
+        {((aSmallInteger isStrictlyPositive) ifTrue:ifFalse: 
+          {(magnitude smod: aSmallInteger)}
+          {(set r (magnitude smod: (aSmallInteger negated)))
+            ((r = 0) ifTrue:ifFalse:
+              {r}
+              {(r + aSmallInteger)})})})}))
 
   ; Answer the sum of the argument and the receiver.
   (method addSmallIntegerTo: (aSmallInteger) (self + (aSmallInteger asLargeInteger)))
@@ -558,9 +564,17 @@
     ((self negated) sdiv: (anInteger negated)))
 
   (method smod: (aSmallInteger)
-    ((aSmallInteger isStrictlyPositive) ifTrue:ifFalse: 
-        {(((self negated) smod: (aSmallInteger negated)) + aSmallInteger)}
-        {((magnitude smod: (aSmallInteger negated)) - aSmallInteger)}))
+    [locals r]
+    ((aSmallInteger = 0) ifTrue:ifFalse:
+      {(self error: 'Cannot-perform-division-or-mod-by-0)}
+      {((magnitude isZero) ifTrue:ifFalse:
+        {0}
+        {((aSmallInteger isStrictlyPositive) ifTrue:ifFalse: 
+          {(set r (magnitude smod: aSmallInteger))
+            ((r = 0) ifTrue:ifFalse:
+              {r}
+              {(aSmallInteger - r)})}
+          {((magnitude smod: (aSmallInteger negated)) negated)})})}))
 
   ; Answer the sum of the argument and the receiver.
   (method addSmallIntegerTo: (aSmallInteger) (self + (aSmallInteger asLargeInteger)))
@@ -606,3 +620,6 @@
     (method <          (n) (primitive < self n))
     (method >          (n) (primitive > self n))
 )
+
+(SmallInteger addSelector:withMethod: 'asLargeInteger
+  (compiled-method () (LargeInteger fromSmall: self)))

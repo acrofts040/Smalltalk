@@ -9,35 +9,43 @@
 (use bignum.smt)
 
 ;;;;;;;;;; TESTING FOR CLASS LARGE INTEGER ;;;;;;;;;;
+
+;; tests for creating large ints
 ; (check-print (LargeInteger fromSmall: 0) 0)
 ; (check-print (LargeInteger fromSmall: 1) 1)
 ; (check-print (LargeInteger fromSmall: 10) 10)
-; (check-print (LargeInteger fromSmall: 35746) 35746)
+; (check-print (LargeInteger fromSmall: 32767) 32767)
+; (check-print (LargeInteger fromSmall: 32768) 32768)
+; (check-print (LargeInteger fromSmall: 32769) 32769)
 ; (check-print (LargeInteger fromSmall: 2147483646) 2147483646)
 
-;; check-assert tests for =
+;; tests for =
 ; (check-assert ((LargeInteger fromSmall: 0) = (LargeInteger fromSmall: 0)))
 ; (check-assert ((LargeInteger fromSmall: 1) = (LargeInteger fromSmall: 1)))
 ; (check-assert ((LargeInteger fromSmall: 15) = (LargeInteger fromSmall: 15)))
 ; (check-assert ((LargeInteger fromSmall: 16) = (LargeInteger fromSmall: 16)))
 ; (check-assert ((LargeInteger fromSmall: 17) = (LargeInteger fromSmall: 17)))
-; (check-assert ((LargeInteger fromSmall: 22) = (LargeInteger fromSmall: 22)))
+; (check-assert ((LargeInteger fromSmall: 32767) = (LargeInteger fromSmall: 32767)))
+; (check-assert ((LargeInteger fromSmall: 32768) = (LargeInteger fromSmall: 32768)))
+; (check-assert ((LargeInteger fromSmall: 32769) = (LargeInteger fromSmall: 32769)))
 ; (check-assert ((LargeInteger fromSmall: 22356565) = (LargeInteger fromSmall: 22356565)))
 ; (check-assert ((LargeInteger fromSmall: 42875982) = (LargeInteger fromSmall: 42875982)))
 
 ; (check-assert (((LargeInteger fromSmall: 0) = (LargeInteger fromSmall: 22)) not))
 ; (check-assert (((LargeInteger fromSmall: 1) = (LargeInteger fromSmall: 15)) not))
 ; (check-assert (((LargeInteger fromSmall: 2) = (LargeInteger fromSmall: 1)) not))
+; (check-assert (((LargeInteger fromSmall: 32769) = (LargeInteger fromSmall: 456)) not))
 ; (check-assert (((LargeInteger fromSmall: 24287589) = (LargeInteger fromSmall: 11352)) not))
 ; (check-assert (((LargeInteger fromSmall: 1394364534) = (LargeInteger fromSmall: 32905874)) not))
 
-; ;; check-assert tests for <
+;; tests for <
 ; (check-assert ((LargeInteger fromSmall: 0) < (LargeInteger fromSmall: 1)))
 ; (check-assert ((LargeInteger fromSmall: 0) < (LargeInteger fromSmall: 536)))
 ; (check-assert ((LargeInteger fromSmall: 1) < (LargeInteger fromSmall: 2)))
 ; (check-assert ((LargeInteger fromSmall: 15) < (LargeInteger fromSmall: 16)))
-; (check-assert ((LargeInteger fromSmall: 16) < (LargeInteger fromSmall: 26)))
-; (check-assert ((LargeInteger fromSmall: 17) < (LargeInteger fromSmall: 1352)))
+; (check-assert ((LargeInteger fromSmall: 17) < (LargeInteger fromSmall: 32768)))
+; (check-assert ((LargeInteger fromSmall: 32768) < (LargeInteger fromSmall: 32769)))
+; (check-assert ((LargeInteger fromSmall: 17) < (LargeInteger fromSmall: 32769)))
 ; (check-assert ((LargeInteger fromSmall: 17356) < (LargeInteger fromSmall: 135258)))
 
 ; (check-assert (((LargeInteger fromSmall: 0) < (LargeInteger fromSmall: 0)) not))
@@ -49,8 +57,8 @@
 ; (check-assert ((LargeInteger fromSmall: 1) > (LargeInteger fromSmall: 0)))
 ; (check-assert ((LargeInteger fromSmall: 15) > (LargeInteger fromSmall: 10)))
 ; (check-assert ((LargeInteger fromSmall: 1565) > (LargeInteger fromSmall: 16)))
+; (check-assert ((LargeInteger fromSmall: 32768) > (LargeInteger fromSmall: 329)))
 ; (check-assert ((LargeInteger fromSmall: 156554767) > (LargeInteger fromSmall: 16356)))
-; (check-assert ((LargeInteger fromSmall: 1565544687) > (LargeInteger fromSmall: 235357)))
 
 ; (check-assert (((LargeInteger fromSmall: 0) > (LargeInteger fromSmall: 0)) not))
 ; (check-assert (((LargeInteger fromSmall: 1) > (LargeInteger fromSmall: 1)) not))
@@ -66,6 +74,7 @@
 ; (check-assert ((LargeInteger fromSmall: 15) <= (LargeInteger fromSmall: 15)))
 ; (check-assert ((LargeInteger fromSmall: 15) <= (LargeInteger fromSmall: 16)))
 ; (check-assert ((LargeInteger fromSmall: 16) <= (LargeInteger fromSmall: 26)))
+; (check-assert ((LargeInteger fromSmall: 32768) <= (LargeInteger fromSmall: 32768)))
 ; (check-assert ((LargeInteger fromSmall: 3467646) <= (LargeInteger fromSmall: 36457563)))
 ; (check-assert ((LargeInteger fromSmall: 127576) <= (LargeInteger fromSmall: 127576)))
 
@@ -74,12 +83,13 @@
 ; (check-assert (((LargeInteger fromSmall: 16555) <= (LargeInteger fromSmall: 1555)) not))
 ; (check-assert (((LargeInteger fromSmall: 109385) <= (LargeInteger fromSmall: 126)) not))
 
-; ;; check-assert tests for >=
+;; check-assert tests for >=
 ; (check-assert ((LargeInteger fromSmall: 0) >= (LargeInteger fromSmall: 0)))
 ; (check-assert ((LargeInteger fromSmall: 1) >= (LargeInteger fromSmall: 0)))
 ; (check-assert ((LargeInteger fromSmall: 15) >= (LargeInteger fromSmall: 15)))
 ; (check-assert ((LargeInteger fromSmall: 16) >= (LargeInteger fromSmall: 15)))
 ; (check-assert ((LargeInteger fromSmall: 1565) >= (LargeInteger fromSmall: 16)))
+; (check-assert ((LargeInteger fromSmall: 32768) >= (LargeInteger fromSmall: 32768)))
 ; (check-assert ((LargeInteger fromSmall: 156556575) >= (LargeInteger fromSmall: 22222)))
 
 ; (check-assert (((LargeInteger fromSmall: 0) >= (LargeInteger fromSmall: 1)) not))
@@ -91,6 +101,7 @@
 ;; tests for negated
 ; (check-print ((LargeInteger fromSmall: 0) negated) 0)
 ; (check-print ((LargeInteger fromSmall: 1) negated) -1)
+; (check-print ((LargeInteger fromSmall: 32768) negated) -32768)
 ; (check-print ((LargeInteger fromSmall: 12463556) negated) -12463556)
 ; (check-print ((LargeInteger fromSmall: 2147483646) negated) -2147483646)
 
@@ -105,7 +116,7 @@
 ; (check-assert (((LargeInteger fromSmall: 12463556) isNegative) not))
 ; (check-assert (((LargeInteger fromSmall: 2147483646) isNegative) not))
 
-; ;; tests for isNonnegative
+;; tests for isNonnegative
 ; (check-assert ((LargeInteger fromSmall: 0) isNonnegative))
 ; (check-assert (((LargeInteger fromSmall: 0) negated) isNonnegative))
 ; (check-assert ((LargeInteger fromSmall: 1) isNonnegative))
@@ -115,7 +126,7 @@
 ; (check-assert ((((LargeInteger fromSmall: 31543653) negated) isNonnegative) not))
 ; (check-assert ((((LargeInteger fromSmall: 2147483646) negated) isNonnegative) not))
 
-; ;; tests for isStrictlyPositive
+;; tests for isStrictlyPositive
 ; (check-assert ((LargeInteger fromSmall: 1) isStrictlyPositive))
 ; (check-assert ((LargeInteger fromSmall: 2463456) isStrictlyPositive))
 ; (check-assert ((LargeInteger fromSmall: 2147483646) isStrictlyPositive))
@@ -126,12 +137,12 @@
 ; (check-assert ((((LargeInteger fromSmall: 31543653) negated) isStrictlyPositive) not))
 ; (check-assert ((((LargeInteger fromSmall: 2147483646) negated) isStrictlyPositive) not))
 
-; ;; tests for adding + 0
+;; tests for adding + 0
 ; (check-print ((LargeInteger fromSmall: 1)      + (LargeInteger fromSmall: 0)) 1)
 ; (check-print ((LargeInteger fromSmall: 134656) + (LargeInteger fromSmall: 0)) 134656)
 ; (check-print ((LargeInteger fromSmall: 0)      + (LargeInteger fromSmall: 2436075)) 2436075)
 
-; ;; tests for adding pos + pos
+;; tests for adding pos + pos
 ; (check-print ((LargeInteger fromSmall: 100) + (LargeInteger fromSmall: 2436075)) 2436175)
 ; (check-print ((LargeInteger fromSmall: 10) + (LargeInteger fromSmall: 2436075)) 2436085)
 ; (check-print ((LargeInteger fromSmall: 10000000) + (LargeInteger fromSmall: 10000000)) 20000000)
@@ -139,7 +150,7 @@
 ; (check-print ((LargeInteger fromSmall: 2147483647) + (LargeInteger fromSmall: 0)) 2147483647) ; 2^31 - 1
 ; (check-print ((LargeInteger fromSmall: 2147483646) + (LargeInteger fromSmall: 1)) 2147483647)
 
-; ;; tests for adding pos + neg
+;; tests for adding pos + neg
 ; (check-print ((LargeInteger fromSmall: 100) + (LargeInteger fromSmall: -1)) 99)
 ; (check-print ((LargeInteger fromSmall: 0) + ((LargeInteger fromSmall: 1) negated)) -1)
 ; (check-print ((LargeInteger fromSmall: 0) + (LargeInteger fromSmall: -12234)) -12234)
@@ -147,7 +158,7 @@
 ; (check-print ((LargeInteger fromSmall: 10000000) + (LargeInteger fromSmall: -10000000)) 0)
 ; (check-print ((LargeInteger fromSmall: 2147483647) + (LargeInteger fromSmall: -2147483647)) 0)
 
-; ;; tests for adding neg + pos
+;; tests for adding neg + pos
 ; (check-print ((LargeInteger fromSmall: -1) + (LargeInteger fromSmall: 100)) 99)
 ; (check-print ((LargeInteger fromSmall: -1) + (LargeInteger fromSmall: 0)) -1)
 ; (check-print ((LargeInteger fromSmall: -12234) + (LargeInteger fromSmall: 0)) -12234)
@@ -156,7 +167,7 @@
 ; (check-print ((LargeInteger fromSmall: -100) + (LargeInteger fromSmall: 2436175)) 2436075)
 ; (check-print ((LargeInteger fromSmall: -2147483647) + (LargeInteger fromSmall: 2147483647)) 0)
 
-; ;; tests for adding neg + neg
+;; tests for adding neg + neg
 ; (check-print ((LargeInteger fromSmall: -1) + (LargeInteger fromSmall: -100)) -101)
 ; (check-print ((LargeInteger fromSmall: -1) + (LargeInteger fromSmall: -1)) -2)
 ; (check-print ((LargeInteger fromSmall: -12234) + (LargeInteger fromSmall: -100)) -12334)
@@ -212,6 +223,8 @@
 ; (check-print ((LargeInteger fromSmall: 16) sdiv: 10) 1)
 ; (check-print ((LargeInteger fromSmall: 16) sdiv: 1) 16)
 ; (check-print ((LargeInteger fromSmall: 25) sdiv: 10) 2)
+; (check-print ((LargeInteger fromSmall: 32767) sdiv: 10) 3276)
+; (check-print ((LargeInteger fromSmall: 32768) sdiv: 10) 3276)
 
 ; (check-error ((LargeInteger fromSmall: 0) sdiv: 0))
 ; (check-error ((LargeInteger fromSmall: 16) sdiv: 0))
@@ -221,23 +234,28 @@
 (check-expect ((LargeInteger fromSmall: 0) smod: 1) 0)
 (check-expect ((LargeInteger fromSmall: 0) smod: 186) 0)
 (check-expect ((LargeInteger fromSmall: 1) smod: 10) 1)
-(check-expect ((LargeInteger fromSmall: 1) smod: 16) 1)
 (check-expect ((LargeInteger fromSmall: 15) smod: 10) 5)
-(check-expect ((LargeInteger fromSmall: 16) smod: 10) 6)
 (check-expect ((LargeInteger fromSmall: 16) smod: 1) 0)
-(check-expect ((LargeInteger fromSmall: 25) smod: 10) 5)
 (check-expect ((LargeInteger fromSmall: 25) smod: 4) 1)
 (check-expect ((LargeInteger fromSmall: -25) smod: 4) 3)
 (check-expect ((LargeInteger fromSmall: -26) smod: 3) 1)
-(check-expect ((LargeInteger fromSmall: 25) smod: -4) 3)
+(check-expect ((LargeInteger fromSmall: 25) smod: -4) -3)
 (check-expect ((LargeInteger fromSmall: -25) smod: -4) -1)
 (check-expect ((LargeInteger fromSmall: 259) smod: 3) 1)
 (check-expect ((LargeInteger fromSmall: -259) smod: 3) 2)
 (check-expect ((LargeInteger fromSmall: 259) smod: -3) -2)
-(check-expect ((LargeInteger fromSmall: 2500) smod: 10) 0)
+(check-expect ((LargeInteger fromSmall: -259) smod: -3) -1)
+(check-expect ((LargeInteger fromSmall: 4095) smod: 7) 0)
+(check-expect ((LargeInteger fromSmall: 4095) smod: -7) 0)
+(check-expect ((LargeInteger fromSmall: -4095) smod: 7) 0)
+(check-expect ((LargeInteger fromSmall: -4095) smod: -7) 0)
+(check-expect ((LargeInteger fromSmall: 4095) smod: -11) -8)
+(check-expect ((LargeInteger fromSmall: 4096) smod: -7) -6)
+(check-expect ((LargeInteger fromSmall: 32768) smod: 32768) 0)
+(check-expect ((LargeInteger fromSmall: 32768) smod: 10) 8)
 
 (check-error ((LargeInteger fromSmall: 0) smod: 0))
-(check-error ((LargeInteger fromSmall: 145) smod: 0))
+; (check-error ((LargeInteger fromSmall: 145) smod: 0))
 
 
 ;;;;;;;;;; END TESTING FOR CLASS LARGE INTEGER ;;;;;;;;;;
