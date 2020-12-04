@@ -147,7 +147,8 @@
           eqBlock
           gtBlock)}))
 
-    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    ; Answer the sum self + aNatural + c, where c is a carry bit 
+    ;      (either 0 or 1).
     (method plus:carry: (aNatural c) (self subclassResponsibility))
 
     ; Compute the difference self − (aNatural + c),
@@ -198,7 +199,8 @@
     ; receiver divided by the base of Natural numbers.
     (method divBase () 0)
 
-    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
+    ; Answer the sum self + aNatural + c, where c is a carry bit 
+    ;   (either 0 or 1).
     (method plus:carry: (aNatural c)
       (self carryIntoNatural:carry: aNatural c))
 
@@ -300,7 +302,8 @@
          (set d2 (aNatural modBase))
          (set b (Natural base))
           (((Natural fromSmall: (d1 * d2))
-            + (((m1 * (Natural fromSmall: d2)) + (m2 * (Natural fromSmall: d1))) timesBase))
+            + (((m1 * (Natural fromSmall: d2)) 
+            + (m2 * (Natural fromSmall: d1))) timesBase))
             + (((m1 * m2) timesBase)timesBase))}))
 
 
@@ -349,8 +352,10 @@
 
     ;;;; private instance methods ;;;;
 
-    ; Answer the sum self + aNatural + c, where c is a carry bit (either 0 or 1).
-    ; if aNatural is zero, send message plus:carry: to aNatural with self and c as args
+    ; Answer the sum self + aNatural + c, where c is a carry bit 
+    ; (either 0 or 1).
+    ; if aNatural is zero, send message plus:carry: to aNatural with 
+    ; self and c as args
     ; else add self + aNatural + c
     (method plus:carry: (aNatural c)
       [locals m1 m2 d1 d2 d' c']
@@ -365,8 +370,8 @@
           (set m2 (aNatural divBase))
           (set d1 d)
           (set d2 (aNatural modBase))
-          (set d' (((d1 + d2) + c) mod: (Natural base))) ; d' = (d1 + d2 + c) mod base
-          (set c' (((d1 + d2) + c) div: (Natural base))) ; c’ = (d1 + d2 + c) div base
+          (set d' (((d1 + d2) + c) mod: (Natural base))) 
+          (set c' (((d1 + d2) + c) div: (Natural base))) 
 
           (return (NatNonzero first:rest: d' (m1 plus:carry: m2 c')))}))
 
@@ -388,7 +393,7 @@
           (set m2 (aNatural divBase))
           (set d1 d)
           (set d2 (aNatural modBase))
-          (set d' (((d1 - d2) - c) mod: (Natural base))) ; d' = (d1 - d2 - b) mod base
+          (set d' (((d1 - d2) - c) mod: (Natural base))) 
           ((((d1 - d2) - c) < 0) ifTrue:ifFalse: 
               {(set c' 1)}
               {(set c' 0)})
@@ -401,7 +406,8 @@
         {(((aNatural modBase) = 0) ifTrue:ifFalse: 
                 {(NatNonzero first:rest: (self borrowFromNat:borrow: 
                 (aNatural divBase) 1) ((Natural base) - 1))}
-                {(NatNonzero first:rest: ((aNatural modBase) - 1) (aNatural divBase) )})}))
+                {(NatNonzero first:rest: 
+                      ((aNatural modBase) - 1) (aNatural divBase) )})}))
 
     ;;;; end private instance methods ;;;;
 
@@ -424,7 +430,8 @@
      ((anInteger isNegative) ifTrue:ifFalse: 
         {(((self fromSmall: 1) + (self fromSmall: ((anInteger + 1) negated)))
           negated)}
-        {((LargePositiveInteger new) magnitude: (Natural fromSmall: anInteger))}))
+        {((LargePositiveInteger new) magnitude: 
+                                      (Natural fromSmall: anInteger))}))
   
   (method asLargeInteger () self)
   (method isZero () (magnitude isZero))
@@ -436,22 +443,28 @@
   (method negated    ()     (self subclassResponsibility))
 
   ; Answer the sum of the argument and the receiver.
-  (method addSmallIntegerTo: (aSmallInteger) (self subclassResponsibility))
+  (method addSmallIntegerTo: (aSmallInteger) 
+            (self subclassResponsibility))
 
   ; Answer the sum of the argument and the receiver.
-  (method addLargePositiveIntegerTo: (aLargePositiveInteger) (self subclassResponsibility))
+  (method addLargePositiveIntegerTo: (aLargePositiveInteger) 
+            (self subclassResponsibility))
 
   ; Answer the sum of the argument and the receiver.
-  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger) (self subclassResponsibility))
+  (method addLargeNegativeIntegerTo: (aLargeNegativeInteger)
+            (self subclassResponsibility))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyBySmallInteger: (aSmallInteger) (self subclassResponsibility))
+  (method multiplyBySmallInteger: (aSmallInteger) 
+            (self subclassResponsibility))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) (self subclassResponsibility))
+  (method multiplyByLargePositiveInteger: (aLargePositiveInteger) 
+            (self subclassResponsibility))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) (self subclassResponsibility))
+  (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger) 
+            (self subclassResponsibility))
 
 
   ;(method div: (_) (self error: 'long-division-not-supported))
@@ -496,7 +509,8 @@
   (method sdiv: (anInteger)
     ((anInteger isStrictlyPositive) ifTrue:ifFalse: 
        {(LargePositiveInteger withMagnitude:  (magnitude sdiv: anInteger))}
-       {((((self - (LargeInteger fromSmall: anInteger)) - (LargeInteger fromSmall: 1))
+       {((((self - (LargeInteger fromSmall: anInteger)) 
+                  - (LargeInteger fromSmall: 1))
              sdiv: (anInteger negated))
             negated)}))
 
@@ -514,11 +528,13 @@
               {(r + aSmallInteger)})})})}))
 
   ; Answer the sum of the argument and the receiver.
-  (method addSmallIntegerTo: (aSmallInteger) (self + (aSmallInteger asLargeInteger)))
+  (method addSmallIntegerTo: (aSmallInteger) 
+            (self + (aSmallInteger asLargeInteger)))
 
   ; Answer the sum of the argument and the receiver.
   (method addLargePositiveIntegerTo: (aLargePositiveInteger)
-    (LargePositiveInteger withMagnitude: (magnitude + (aLargePositiveInteger magnitude))))
+    (LargePositiveInteger withMagnitude: 
+                            (magnitude + (aLargePositiveInteger magnitude))))
 
   ; Answer the sum of the argument and the receiver.
   (method addLargeNegativeIntegerTo: (aLargeNegativeInteger)
@@ -531,17 +547,23 @@
       {(LargeNegativeInteger withMagnitude: (n - p))}))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyBySmallInteger: (aSmallInteger) (self * (aSmallInteger asLargeInteger)))
+  (method multiplyBySmallInteger: (aSmallInteger) 
+            (self * (aSmallInteger asLargeInteger)))
 
   ; Answer the product of the argument and the receiver.
   (method multiplyByLargePositiveInteger: (aLargePositiveInteger)
-    (LargePositiveInteger withMagnitude: (magnitude * (aLargePositiveInteger magnitude))))
+    (LargePositiveInteger withMagnitude: 
+                            (magnitude * (aLargePositiveInteger magnitude))))
 
   ; Answer the product of the argument and the receiver.
   (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger)
     (((self magnitude) isZero) ifTrue:ifFalse:
-      {(LargePositiveInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude)))}
-      {(LargeNegativeInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude)))}))
+      {(LargePositiveInteger withMagnitude: 
+                              (magnitude 
+                                * (aLargeNegativeInteger magnitude)))}
+      {(LargeNegativeInteger withMagnitude: 
+                              (magnitude 
+                                * (aLargeNegativeInteger magnitude)))}))
 
   (method isNegative         () false)
   (method isNonnegative      () true)
@@ -577,7 +599,8 @@
           {((magnitude smod: (aSmallInteger negated)) negated)})})}))
 
   ; Answer the sum of the argument and the receiver.
-  (method addSmallIntegerTo: (aSmallInteger) (self + (aSmallInteger asLargeInteger)))
+  (method addSmallIntegerTo: (aSmallInteger) 
+            (self + (aSmallInteger asLargeInteger)))
 
   ; Answer the sum of the argument and the receiver.
   (method addLargePositiveIntegerTo: (aLargePositiveInteger)
@@ -585,19 +608,23 @@
 
   ; Answer the sum of the argument and the receiver.
   (method addLargeNegativeIntegerTo: (aLargeNegativeInteger)
-    (LargeNegativeInteger withMagnitude: (magnitude + (aLargeNegativeInteger magnitude))))
+    (LargeNegativeInteger withMagnitude: 
+                            (magnitude + (aLargeNegativeInteger magnitude))))
 
   ; Answer the product of the argument and the receiver.
-  (method multiplyBySmallInteger: (aSmallInteger) (self * (aSmallInteger asLargeInteger)))
+  (method multiplyBySmallInteger: (aSmallInteger) 
+              (self * (aSmallInteger asLargeInteger)))
 
   ; Answer the product of the argument and the receiver.
   (method multiplyByLargePositiveInteger: (aLargePositiveInteger)
     (aLargePositiveInteger multiplyByLargeNegativeInteger: self))
-    ;(LargeNegativeInteger withMagnitude: (magnitude * (aLargePositiveInteger magnitude))))
+    ;(LargeNegativeInteger withMagnitude:  
+    ;  (magnitude * (aLargePositiveInteger magnitude))))
 
   ; Answer the product of the argument and the receiver.
   (method multiplyByLargeNegativeInteger: (aLargeNegativeInteger)
-    (LargePositiveInteger withMagnitude: (magnitude * (aLargeNegativeInteger magnitude))))
+    (LargePositiveInteger withMagnitude: 
+                            (magnitude * (aLargeNegativeInteger magnitude))))
 
   (method isNegative         () true)
   (method isNonnegative      () (magnitude isZero))
