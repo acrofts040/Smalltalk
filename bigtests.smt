@@ -6,8 +6,6 @@
 ;; Name: Ann Marie Burke (aburke04)
 ;; Partner: Andrew Crofts
 
-(use mixnum.smt)
-
 ;; 3 tests for class Natural ;;
 
 ;; Summary: Tests the +, -, and * operations
@@ -42,8 +40,9 @@
 (check-print
     ((((LargeInteger fromSmall: 32767) sdiv: 10) sdiv: 1) smod: -5) -4)
 
-;; Summary: tests multiplying large negative integers, adding large negative integers
-;;                negating large integers, and multiplying negatives by positives
+;; Summary: tests multiplying large negative integers,
+;;          adding large negative integers
+;;          negating large integers, and multiplying negatives by positives
 (check-print
     (((((LargeInteger fromSmall: -2147483647) * (LargeInteger fromSmall: -1))
         + (LargeInteger fromSmall: -15869))
