@@ -14,33 +14,32 @@ For each concrete class you defined to represent natural numbers in exercise 37
     - List the instance variables.
     - Copy and paste the class’s abstraction function and invariant.
 
+Exercise 37:
+
 NatZero: 
 
-	Invariants: natzero will always have an m of 0 and a d of 0,
-	            natzero will never signify any size nat other than 0
+	Abstraction Function: A (self) = 0
 
-	ivars: n/a (any need for instance variables was avoided
-	            through dyammic dispatch)
+	Invariants: natzero will always have an m of 0 and a d of 0, natzero will never
+				signify any size nat other than 0
 
-NatNonzero:
+	ivars: n/a (any need for instance variables was avoided through dyammic dispatch)
 
-	Invariants: a NatNonzero object will always be greater than zero
+NatNonzero: 
+	Abstraction Function: A(self) = (m * base) + d
+
+	Invariants: a NatNonzero object will never be less than or equal to zero in size.
+
 
 	instance variables: 
 		b: an integer representing the base of the number system to be used. 
-		   Will be used to mod and divide values to obtain different digits
-		   of the number. 
-		d: integer representing the last digit of the natural number.
-		   In practice, d is the mod of the natural number when it is
-		   modded by base.
-		m: a natural number representing the rest of the digits
-		   other than the smallest of the number (d) .
-		   In practice, it is the natural number divided by the base.
+			Will be used to mod and divide values to obtain different digits
+			of the number. 
+		d: integer representing the last digit of the natural number. In practice,
+			d is the mod of the natural number when it is modded by base.
+		m: a natural number representing the rest of the digits other than the smallest
+			 of the number (d) . In practice, it is the natural number divided by the base. 
 
-
-For the natural numbers, explain in one or two sentences why you chose
-the representation that you did. In addition, please tell us what went well
-and if you have any regrets:
 
 We ended up using the subclass representation for its ease in implementation and,
 	vitally, in debugging. With the sublass rep. there were no issues trying 
@@ -51,29 +50,32 @@ We ended up using the subclass representation for its ease in implementation and
 	the tracing functionality. Overall, we have no regrets. 
 
 
-For each concrete class you defined to represent large integers in exercise 38
-	- List the instance variables.
-	- Copy and paste the class’s abstraction function and invariant.
 
 Exercise 38:
 
 	LargeInteger: 
-		Invariants: the object will never have any value in which
-		            the magnitude mod 1 is != 0. 
+		Invariants: the object will never have any value in which the magnitude mod 1 is
+					!= 0. 
 
 		instance variables: 
 			magnitude: a magnitude object that represents the numerical size of the 
 						integer (distance from zero) (regardless of sign). 
 
-	LargePositiveInteger: 
-		Invariants: a LargePositiveInteger object will always
-		            represent a positive number
 
-		ivars: none
+	LargePositiveInteger: (where m represents magnitude)
 
-	LargeNegativeInteger:
-		Invariants: a LargePositiveInteger object will always
-					represent a negative number
-		ivars: none
+		Abstraction Function: A (self) = m
+
+		Invariants: a LargePositiveInteger object will never have a negative sign
+
+		ivars: n/a
+
+	LargeNegativeInteger: (where m represents magnitude)
+
+		Abstraction Function: A (self) = -1 * m
+
+		Invariants: a LargePositiveInteger object will never have a positive sign
+		ivars: n/a
+
 
 
