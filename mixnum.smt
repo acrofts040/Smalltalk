@@ -31,25 +31,32 @@
         {(0 - (self asLargeInteger))}) value)))
 
 (SmallInteger addSelector:withMethod: 'addLargePositiveIntegerTo:
-  (compiled-method (aLargePositiveInteger) (aLargePositiveInteger addSmallIntegerTo: self)))
+  (compiled-method (aLargePositiveInteger) 
+                    (aLargePositiveInteger addSmallIntegerTo: self)))
 
 (SmallInteger addSelector:withMethod: 'addLargeNegativeIntegerTo:
-  (compiled-method (aLargeNegativeInteger) (aLargeNegativeInteger addSmallIntegerTo: self)))
+  (compiled-method (aLargeNegativeInteger) 
+                    (aLargeNegativeInteger addSmallIntegerTo: self)))
 
 (SmallInteger addSelector:withMethod: 'multiplyByLargePositiveInteger:
-  (compiled-method (aLargePositiveInteger) (aLargePositiveInteger multiplyBySmallInteger: self)))
+  (compiled-method (aLargePositiveInteger) 
+                    (aLargePositiveInteger multiplyBySmallInteger: self)))
 
 (SmallInteger addSelector:withMethod: 'multiplyByLargeNegativeInteger:
-  (compiled-method (aLargeNegativeInteger) (aLargeNegativeInteger multiplyBySmallInteger: self)))
+  (compiled-method (aLargeNegativeInteger) 
+                    (aLargeNegativeInteger multiplyBySmallInteger: self)))
 
 ; (SmallInteger addSelector:withMethod: '<
-;   (compiled-method (anInteger) (anInteger smallIntegerGreaterThan: self)))
+;   (compiled-method (anInteger) 
+;              (anInteger smallIntegerGreaterThan: self)))
 
 ; (SmallInteger addSelector:withMethod: 'lessThanLargeInt:
-;   (compiled-method (aLargeInteger) (aLargeInteger smallIntegerGreaterThan: self)))
+;   (compiled-method (aLargeInteger) 
+;                      (aLargeInteger smallIntegerGreaterThan: self)))
 
 ; (SmallInteger addSelector:withMethod: 'smallIntegerGreaterThan:
-;   (compiled-method (aSmallInteger) (primitive > aSmallInteger self)))
+;   (compiled-method (aSmallInteger) 
+;                      (primitive > aSmallInteger self)))
 
 ; (SmallInteger addSelector:withMethod: '>
 ;   (compiled-method (anInteger) (anInteger < self)))
