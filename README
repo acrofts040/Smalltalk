@@ -1,10 +1,8 @@
 README
 COMP 105 - small assignment
 Fall 2020
-Name: Ann Marie Burke (aburke04)
+Name: Ann Marie Burke 
 Partner: Andrew Crofts
-
-A description of how you tested your bignum code
 
 We put all of our tests into a separate file, and wrote unit tests for all of
 the methods we wrote and methods that relied on methods we wrote.
